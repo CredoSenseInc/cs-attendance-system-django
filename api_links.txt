@@ -1,0 +1,5 @@
+http://localhost/api-esp/server-to-esp/
+http://localhost/esp-to-server/JSON_ID
+
+http://localhost/api-esp/esp-to-server-attendance
+http://localhost/api-esp/esp-to-server-attendance-update/JSON_ID

@@ -13,12 +13,14 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
+from django.conf.urls import url 
 from django.urls import path, include
+from .views import *
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls')),
-    path('api-esp/', include('api_esp.urls')),
-
+    path('server-to-esp', showCommands, name='showCommands'),
+    # path('esp-to-server/<int:id>', update, name='update'),
+    url(r'^esp-to-server/(?P<id>[0-9]+)$', commandsUpdate),
+    path('esp-to-server-attendance', attendance_api, name='attendance_api'),
+     url(r'^esp-to-server-attendance-update/(?P<id>[0-9]+)$', attendance_api_update),
 ]
