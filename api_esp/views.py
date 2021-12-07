@@ -67,9 +67,7 @@ def attendance_api(request):
 
 @api_view(['PUT'])
 def attendance_api_update(request, id):
-    print("IN update")
     try: 
-        print("IN PUT")
         data_obj = attendanceLog.objects.get(id=id) 
         print(data_obj)
     except commands.DoesNotExist: 
