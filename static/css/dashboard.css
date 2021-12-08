@@ -219,3 +219,15 @@ body {
     display: block;
     font-size: 18px;
   }
+
+/* Table */
+
+.page-link {
+    color: #000;
+}
+
+.page-item.active .page-link {
+  color: #fff;
+  background-color: #009145;
+  border-color: #009145;
+}
