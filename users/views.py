@@ -23,6 +23,7 @@ def user_login(request):
                 return redirect(request.POST.get('next'))
             else:
                 return redirect('dashboard')
+                # return render(request, 'dashboard/dashboard.html')
         else:
             print("In Else")
             # If the username or password is not
@@ -32,7 +33,7 @@ def user_login(request):
 
     # context = {'categories': categories,
     #            }
-    return render(request, 'user/login.html')
+    return render(request, 'login/login.html')
 
 # simple logout function
 def user_logout(request):

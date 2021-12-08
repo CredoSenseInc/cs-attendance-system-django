@@ -1,0 +1,129 @@
+<div class="sidenav hide-mobile" id="sidenav-id">
+    <a href="#" class="" id="dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+    <button class="dropdown-btn" id="data-logger"><i class="fas fa-microchip"></i> Data loggers
+        <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-container">
+        <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-plus"></i> Add a logger</a>
+        {% for i in logger_list_all %}
+        <a href="#"><i class="fas fa-microchip"></i> {{ i.data_logger_name }}</a>
+        {% endfor %}
+    </div>
+    <a href="#" data-bs-toggle="modal" data-bs-target="#option-download-logger"><i class="fas fa-download"></i> Download data</a>
+
+</div>
+
+<script>
+
+    /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
+    var dropdown = document.getElementsByClassName("dropdown-btn");
+    var i;
+
+    for (i = 0; i < dropdown.length; i++) {
+        dropdown[i].addEventListener("click", function () {
+            //   this.classList.toggle("active");
+            var dropdownContent = this.nextElementSibling;
+            if (dropdownContent.style.display === "block") {
+                dropdownContent.style.display = "none";
+            } else {
+                dropdownContent.style.display = "block";
+            }
+        });
+    }
+
+</script>
+
+
+<!-- Add Logger -->
+<div class="container">
+    <div class="row">
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add a logger</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action = "#" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <!-- <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Logger Model:</label>
+                                <input type="text" class="form-control" id="recipient-name">
+                            </div> -->
+
+                            <div class="mb-3">
+                                <label for="exampleFormControlSelect1">Logger Model:</label>
+                                <select class="form-control" id="logger-model-id" required name="logger-model">
+                                    <option value="CS-DL824C">CS-DL824C</option>
+                                    <option value="CS-DL726C">CS-DL726C</option>
+                                    <option value="CS-DL776C">CS-DL776C</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Logger name:</label>
+                                <input type="text" class="form-control" id="logger-name" name="logger-name" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="exampleFormControlSelect1">Chart type:</label>
+                                <select class="form-control" id="logger-model-id" required name="logger-chart">
+                                    <option value="line">Line</option>
+                                    <option value="pie">Pie</option>
+                                    <option value="bar">Bar</option>
+                                </select>
+                            </div>
+
+                            <!-- <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Channel 01 name:</label>
+                                <input type="text" class="form-control" id="ch-01-name">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Channel 02 name:</label>
+                                <input type="text" class="form-control" id="ch-02-name">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Channel 03 name:</label>
+                                <input type="text" class="form-control" id="ch-03-name">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Channel 03 name:</label>
+                                <input type="text" class="form-control" id="ch-03-name">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Channel 03 name:</label>
+                                <input type="text" class="form-control" id="ch-03-name">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Channel 03 name:</label>
+                                <input type="text" class="form-control" id="ch-03-name">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Channel 03 name:</label>
+                                <input type="text" class="form-control" id="ch-03-name">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Channel 03 name:</label>
+                                <input type="text" class="form-control" id="ch-03-name">
+                            </div> -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

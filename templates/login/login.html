@@ -1,0 +1,83 @@
+{%extends 'base/base.html'%}
+{%load static%}
+{% block header %}
+{% include "base/header.html" %}
+<title>Login | CredoSense Cloud</title>
+
+<meta property="og:title" content="CredoSense Limited">
+<meta property="og:description"
+    content="CredoSense Inc. (Ltd.) strives to become a global leader in environmental sensor-logger systems by making intelligent and affordable monitoring solutions for scientiﬁc and industrial applications. It was created by a group of scientists passionate about measuring the natural environment and envision a better world by impacting education, science, and industries alike. The company emerged as a Canadian-Bangladeshi joint venture and embarked on its mission in 2019.">
+<meta property="og:image" content="{%static ''%}assets/img/logo.png">
+
+<!-- <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script> -->
+<link rel="stylesheet" href="{%static ''%}css/login.css">
+{% endblock header %}
+
+{%block mainbody%}
+
+
+<div class="jumbotron vertical-center">
+    <div class="container login-card">
+        <section class="wrapper shadow-lg">
+            <div class="heading">
+                <h1 class="text text-large mont-regular">Sign in</h1>
+            </div>
+            <form name="login" class="form" action="{% url 'login' %}" method="post">
+                {% csrf_token %}
+                {% for message in messages %}
+                <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                   {{message}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endfor %}
+                <div class="input-control">
+                    <label for="email" class="input-label" hidden>Email Address</label>
+                    <input type="email" name="email" class="input-field" placeholder="Email Address" required>
+                </div>
+                <div class="input-control">
+                    <label for="password" class="input-label" hidden>Password</label>
+                    <input id="password-field" type="password" name="password" class="input-field" placeholder="Password" required>
+                    <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                </div>
+                <script>
+                    $(".toggle-password").click(function() {
+    
+                    $(this).toggleClass("fa-eye fa-eye-slash");
+                    var input = $($(this).attr("toggle"));
+                    if (input.attr("type") == "password") {
+                    input.attr("type", "text");
+                    } else {
+                    input.attr("type", "password");
+                    }
+                    });
+                </script>
+                
+                {% if request.GET.next %}
+                    <input type="hidden" name="next" value="{{request.GET.next}}">
+                {% endif %}
+    
+                <div class="input-control">
+                    <!-- <a href="#" class="text text-links">Forgot Password</a> -->
+                    <button class="input-submit button-sucess lgn-btn-size" type="submit"><span>Login</span></button>
+                    <!-- <input type="submit" name="submit" class="input-submit" value="Login" disabled> -->
+    
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+
+
+
+<script>
+    document.getElementById("hint_id_password1").children[3].style.display = "none"
+</script>
+
+{% endblock %}
+
+
+{% block footer %}
+
+<!--  -->
+
+{% endblock footer %}

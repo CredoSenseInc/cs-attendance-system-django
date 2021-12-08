@@ -13,14 +13,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf.urls import url 
+# from django.conf.urls import url 
 from django.urls import path, include
 from .views import *
 
 urlpatterns = [
-    path('server-to-esp', showCommands, name='showCommands'),
-    # path('esp-to-server/<int:id>', update, name='update'),
-    url(r'^esp-to-server/(?P<id>[0-9]+)$', commandsUpdate),
-    path('esp-to-server-attendance', attendance_api, name='attendance_api'),
-     url(r'^esp-to-server-attendance-update/(?P<id>[0-9]+)$', attendance_api_update),
+    path('server-to-esp/', showCommands, name='showCommands'),
+    path('esp-to-server/<int:id>', commandsUpdate, name='commandsUpdate'),
+    # url(r'^esp-to-server/(?P<id>[0-9]+)$', commandsUpdate),
+    path('esp-to-server-attendance/', attendance_api, name='attendance_api'),
+    path('esp-to-server-attendance-update/<int:id>', attendance_api_update, name='attendance_api_update'),
+    # url(r'^esp-to-server-attendance-update/(?P<id>[0-9]+)$', attendance_api_update),
 ]

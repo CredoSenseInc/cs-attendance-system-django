@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+from django.contrib.messages import constants as messages
+from django.contrib.messages import constants as message_constants
 
 from pathlib import Path
 import os
@@ -63,7 +65,7 @@ ROOT_URLCONF = 'cs_attendance_system.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -77,7 +79,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'cs_attendance_system.wsgi.application'
-
+# messages files
+MESSAGE_LEVEL = message_constants.DEBUG
+# tags for django messages
+MESSAGE_TAGS = {
+    messages.DEBUG: 'alert-info',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -139,12 +150,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+if DEBUG:
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
-STATIC_ROOT = os.path.join(BASE_DIR, 'root')
+    STATIC_URL = '/static/'
+
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static')
+    ]
+    STATIC_ROOT = os.path.join(BASE_DIR, 'root')
+else:
+    STATIC_URL = '/static/'
+
+    STATICFILES_DIRS = [
+        # os.path.join(BASE_DIR, 'static')
+    ]
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
