@@ -92,7 +92,7 @@ body {
   } */
 
 .accout-dropdown.dropdown-menu[data-bs-popper]{
-   left: -120px;
+   left: 0px;
 }
 
 /* .form-check-input {
@@ -217,7 +217,7 @@ body {
     text-transform: capitalize;
     opacity: 0.5;
     display: block;
-    font-size: 18px;
+    font-size: 100%;
   }
 
 /* Table */

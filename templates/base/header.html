@@ -13,7 +13,7 @@
         <li class="nav-item dropdown px-2">
           <a class="nav-link dropdown-toggle text-white hide-mobile" href="#" id="navbarDropdownMenuLink"
             role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-user-circle myPadding"></i> 
+            <i class="fas fa-user-circle myPadding"></i> {{ user.full_name }}
           </a>
 
           <a class="nav-link dropdown-toggle text-white hide-pc" href="#" id="navbarDropdownMenuLink" role="button"
@@ -23,9 +23,10 @@
           
           <ul class="dropdown-menu dropdown-menu-right accout-dropdown" aria-labelledby="navbarDropdownMenuLink">
             
-            <li class="dropdown-item disabled" style="color:black;">{{ user.full_name }}</li>
+            <!-- <li class="dropdown-item disabled" style="color:black;">{{ user.full_name }}</li>
             <li class="dropdown-item disabled" style="color:black;">({{ user.user_unique_id }})</li>
-            <div class="dropdown-divider"></div>
+            <div class="dropdown-divider"></div> -->
+            <li><a class="dropdown-item" href="{% url 'user_logout' %}">Change password</a></li>
             <li><a class="dropdown-item" href="{% url 'user_logout' %}">Logout</a></li>
 
             
@@ -36,28 +37,21 @@
        
         {% if user.id is not None %}
         <div class="hide-pc">
+          
           <li class="nav-item px-2"> 
-            <a class="nav-link  text-white" href="#"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a class="nav-link  text-white active" href="{% url 'dashboard' %}"><i class="fas fa-chart-line"></i> Dashboard</a>
           </li>
-  
-          <li class="nav-item dropdown px-2">
-  
-            <a class="nav-link dropdown-toggle text-white hide-pc" href="#" id="navbarDropdownMenuLink" role="button"
-              data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fas fa-microchip"></i> Data loggers
-            </a>
-  
-  
-            <ul class="dropdown-menu dropdown-menu-right accout-dropdown" aria-labelledby="navbarDropdownMenuLink">
-              <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><span>&nbsp</span><i class="fas fa-plus"></i> Add a logger</a></li>
-              {% for i in logger_list_all %}
-              <li><a href="{% url 'logger' i.data_logger_id %}"><span>&nbsp</span><i class="fas fa-microchip"></i> {{ i.data_logger_name }}</a></li>
-              {% endfor %}
-            </ul>
+
+          <li class="nav-item px-2"> 
+            <a class="nav-link  text-white" href="{% url 'employee' %}"><i class="fas fa-users"></i> Employees</a>
           </li>
-  
-          <li class="nav-item px-2">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#option-download-logger" class="text-white nav-link"><i class="fas fa-download"></i> Download data</a>
+
+          <li class="nav-item px-2"> 
+            <a class="nav-link  text-white" href="#"><i class="fas fa-download"></i> Download data</a>
+          </li>
+
+          <li class="nav-item px-2"> 
+            <a class="nav-link  text-white" href="{% url 'settings' %}"><i class="fas fa-cog"></i> Settings</a>
           </li>
         </div>
 

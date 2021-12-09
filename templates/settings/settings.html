@@ -1,0 +1,101 @@
+{%extends 'base/base.html'%}
+{%load static%}
+{% block header %}
+{% include "base/header.html" %}
+<title>Settings | CredoSense</title>
+<link rel="stylesheet" href="{%static ''%}css/dashboard.css">
+<link rel="stylesheet" href="{%static ''%}css/settings.css">
+{% endblock header %}
+{%block mainbody%}
+
+{% include "sidebar/sidebar.html" %}
+
+<div class="content mt-3">
+    <h4>Settings</h4>
+    <hr>
+   <div class="row">
+       <div class="col">
+        <form>
+
+            <div class="row g-3 align-items-center mb-3">
+                <div class="col-auto">
+                  <label for="inputPassword6" class="col-form-label">Start time: </label>
+                </div>
+
+                <div class="col-auto">
+                  <input type="time" id="start-time" class="form-control" aria-describedby="startTime">
+                </div>
+            </div>
+
+            <div class="row g-3 align-items-center mb-3">
+                <div class="col-auto">
+                  <label for="inputPassword6" class="col-form-label">End time: </label>
+                </div>
+
+                <div class="col-auto">
+                  <input type="time" id="end-time" class="form-control" aria-describedby="endTime">
+                </div>
+            </div>
+
+            <div class="row g-3 align-items-center mb-3">
+                <div class="col-auto">
+                  <label for="inputPassword6" class="col-form-label">Count delay after: </label>
+                </div>
+
+                <div class="col-auto">
+                  <input type="time" id="delay-time" class="form-control" aria-describedby="delayTime">
+                </div>
+            </div>
+
+            <div class="row g-3 align-items-center mb-3">
+                <div class="col-auto">
+                  <label for="inputPassword6" class="col-form-label">Weekends: </label>
+                </div>
+
+                <div class="col-auto">
+                    <input type="checkbox" class="btn-check" id="week-saturday" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="week-saturday">Saturday</label>
+                  
+                    <input type="checkbox" class="btn-check" id="week-sunday" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="week-sunday">Sunday</label>
+                  
+                    <input type="checkbox" class="btn-check" id="week-monday" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="week-monday">Monday</label>
+
+                    <input type="checkbox" class="btn-check" id="week-tuesday" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="week-tuesday">Tuesday</label>
+
+                    <input type="checkbox" class="btn-check" id="week-wednesday" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="week-wednesday">Wednesday</label>
+
+                    <input type="checkbox" class="btn-check" id="week-thursday" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="week-thursday">Thursday</label>
+
+                    <input type="checkbox" class="btn-check" id="week-friday" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="week-friday">Friday</label>
+                </div>
+            </div>
+
+              
+        
+
+            
+          </form>
+       </div>
+   </div>
+
+</div>
+
+</div>
+<script>
+    var d = document.getElementById("settings");
+    d.className += " active";
+</script>
+
+<script>
+    $(document).ready(function() {
+    $('#attendanceTable').DataTable();
+} );
+</script>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+label{
+    width: 150px;
+}
+
+/* .btn-outline-primary{
+    color: #009145 !important;
+    border-color: #ced4da !important;
+  }
+
+, .btn-outline-primary:active {
+    background-color: #009145 !important;
+  }   */
+
+
+
+
+
+
+
+
+.btn:active {
+box-shadow: none;
+color: #000;
+} 
+
+
+.btn-outline-primary {
+    color: #000;
+    border-color: #ced4da;
+}
+
+.btn-outline-primary:hover {
+    color: #000;
+    background-color: transparent;
+    border-color: #ced4da;
+}
+
+
+.btn-check:checked+.btn-outline-primary,.btn-outline-check:focus  {
+    background-color: #009145;
+    border-color: #009145!important;
+}
+
+
+
+  .btn-outline-primary:active{
+    background: #ced4da!important;
+    border-color: #ced4da!important;
+    outline: none;
+    box-shadow: none !important;
+  }

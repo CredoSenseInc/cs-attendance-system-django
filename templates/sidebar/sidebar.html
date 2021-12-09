@@ -1,16 +1,8 @@
 <div class="sidenav hide-mobile" id="sidenav-id">
-    <a href="#" class="" id="dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
-    <button class="dropdown-btn" id="data-logger"><i class="fas fa-microchip"></i> Data loggers
-        <i class="fa fa-caret-down"></i>
-    </button>
-    <div class="dropdown-container">
-        <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-plus"></i> Add a logger</a>
-        {% for i in logger_list_all %}
-        <a href="#"><i class="fas fa-microchip"></i> {{ i.data_logger_name }}</a>
-        {% endfor %}
-    </div>
-    <a href="#" data-bs-toggle="modal" data-bs-target="#option-download-logger"><i class="fas fa-download"></i> Download data</a>
-
+    <a href="{% url 'dashboard' %}" class="" id="dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+    <a href="{% url 'employee' %}" class="" id="employees"><i class="fas fa-users"></i> Employees</a>
+    <a href="{% url 'settings' %}" class="" id="download"><i class="fas fa-download"></i> Download data</a>
+    <a href="{% url 'settings' %}" class="" id="settings"><i class="fas fa-cog"></i> Settings</a>
 </div>
 
 <script>
