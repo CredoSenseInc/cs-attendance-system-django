@@ -5,3 +5,6 @@ http://localhost/esp-to-server/JSON_ID
 Attendance:
 http://localhost/api-esp/esp-to-server-attendance
 http://localhost/api-esp/esp-to-server-attendance-update/JSON_ID
+
+Django Autocomplete with jQuery UI | AJAX | Search | Filter from Database | Tutorial | Code Band
+https://www.youtube.com/watch?v=-oLVZp1NQVE

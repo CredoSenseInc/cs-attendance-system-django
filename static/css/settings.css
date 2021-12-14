@@ -1,5 +1,5 @@
 label{
-    width: 150px;
+    width: 170px;
 }
 
 /* .btn-outline-primary{
@@ -49,3 +49,7 @@ color: #000;
     outline: none;
     box-shadow: none !important;
   }
+
+/* .off-date{
+  display: none;
+} */
