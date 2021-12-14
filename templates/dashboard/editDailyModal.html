@@ -1,0 +1,82 @@
+<!-- Modal -->
+<div class="modal fade" id="edit-daily{{list.id}}" tabindex="-1" aria-labelledby="daily{{list.id}}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Update daily summary</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="">
+            <div class="row g-3 align-items-center mb-1">
+              <div class="col-auto">
+                <label for="" class="col-form-label">Name: </label>
+              </div>
+    
+              <div class="col-auto">
+                {{list.emp.emp_name}}
+              </div>
+            </div>
+
+            <div class="row g-3 align-items-center mb-1">
+              <div class="col-auto">
+                <label for="" class="col-form-label">ID: </label>
+              </div>
+    
+              <div class="col-auto">
+                {{list.emp.emp_id}}
+              </div>
+            </div>
+
+            <div class="row g-3 align-items-center mb-3">
+              <div class="col-auto">
+                <label for="" class="col-form-label">Status: </label>
+              </div>
+            
+              <div class="col-auto">
+                <input class="form-check-input" type="radio" name="statusRadio" id="statusRadio1" {% if list.emp_present %} checked {%endif%} value="1">
+                <label class="form-check-label" for="statusRadio1" style="width: max-content;">
+                  Present&nbsp;
+                </label>
+
+                <input class="form-check-input" type="radio" name="statusRadio" id="statusRadio1" {% if not list.emp_present %} checked {%endif%} value="0">
+                <label class="form-check-label" for="statusRadio1" style="width: max-content;">
+                  Absent
+                </label>
+              </div>
+
+              <div class="row g-3 align-items-center mb-3">
+                <div class="col-auto">
+                  <label for="" class="col-form-label">In time: </label>
+                </div>
+      
+                <div class="col-auto">
+                  <input type="time" id="from" name="inTime" class="form-control" aria-describedby="FromTime"
+                    value="{{list.emp_in_time|time:"H:i"}}" required>
+                </div>
+              </div>
+
+              <div class="row g-3 align-items-center mb-3">
+                <div class="col-auto">
+                  <label for="" class="col-form-label">Out time: </label>
+                </div>
+      
+                <div class="col-auto">
+                  <input type="time" id="from" name="outTime" class="form-control" aria-describedby="FromTime"
+                    value="{{list.emp_out_time|time:"H:i"}}" required>
+                </div>
+              </div>
+            </div>
+
+            <input type="text" id="from" name="id" class="form-control" aria-describedby="FromTime"
+                    value="{{list.id}}" required hidden>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+          </form>
+        </div>
+        
+      </div>
+    </div>
+  </div>
