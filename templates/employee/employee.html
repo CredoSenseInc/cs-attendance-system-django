@@ -28,49 +28,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Tiger Nixon</td>
-                        <td>System Architect</td>
-                        <td>Edinburgh</td>
-                        <td>61</td>
-                        <td>61</td>
-                       
-                    </tr>
-                    <tr>
-                        <td>Garrett Winters</td>
-                        <td>Accountant</td>
-                        <td>Tokyo</td>
-                        <td>63</td>
-                        <td>61</td>
-                       
-                    </tr>
-                    <tr>
-                        <td>Ashton Cox</td>
-                        <td>Junior Technical Author</td>
-                        <td>San Francisco</td>
-                        <td>66</td>
-                        <td>61</td>
-                       
-                    </tr>
-                    <tr>
-                        <td>Cedric Kelly</td>
-                        <td>Senior Javascript Developer</td>
-                        <td>Edinburgh</td>
-                        <td>22</td>
-                        <td>61</td>
-                       
-                    </tr>
-                    <tr>
-                        <td>Airi Satou</td>
-                        <td>Accountant</td>
-                        <td>Tokyo</td>
-                        <td>33</td>
-                        <td>61</td>
-                       
-                    </tr>
                     
-                    
-                    
+                    {%for emp in emp_list%}
+                    <tr>
+                        <td>{{emp.emp_name}}</td>
+                        <td>{{emp.emp_id}}</td>
+                        <td>{{emp.emp_finger_id}}</td>
+                        <td>{{emp.emp_designation}}</td>
+                        <td>{{emp.emp_dept}}</td>
+                    </tr>
+                    {%endfor%}
                 </tbody>
                 <!-- <tfoot>
                     <tr>

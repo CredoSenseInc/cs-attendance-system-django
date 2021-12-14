@@ -7,7 +7,11 @@ from django.db.models import Q
 
 @login_required(login_url='user/login/')
 def employee_page(request):
-    return render(request, 'employee/employee.html')
+    emp_list = employee.objects.all()
+    context = {
+        "emp_list" : emp_list
+    }
+    return render(request, 'employee/employee.html', context)
 
 @login_required(login_url='user/login/')
 def attendance_download(request):

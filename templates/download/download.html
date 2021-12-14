@@ -117,7 +117,7 @@
     $( function() {
       $( "#empname" ).autocomplete({
         source: '{% url 'attendance-download-search' %}',
-        minLength: 2,
+        minLength: 1,
       });
     } );
     </script>
