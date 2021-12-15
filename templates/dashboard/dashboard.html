@@ -4,7 +4,7 @@
 {% include "base/header.html" %}
 <title>Dashboard | CredoSense</title>
 <link rel="stylesheet" href="{%static ''%}css/dashboard.css">
-<link rel="stylesheet" href="{%static ''%}css/settings.css">
+
 {% endblock header %}
 {%block mainbody%}
 
@@ -90,28 +90,14 @@
                             {%for list in daily_log_list%}
                             {% include "dashboard/editDailyModal.html" %}
                             <tr>
-
-                                <script>
-                                    console.log({{list.emp.emp_id}})
-                                </script>
                                 <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp.emp_name}}</a></td>
-                                <td>{{list.emp.emp_id}}</td>
-                                <td>{% if list.emp_present %}Present {% else %}Absent{%endif%}</td>
-                                <td>{{list.emp_in_time}}</td>
-                                <td>{{list.emp_out_time}}</td>
+                                <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp.emp_id}}</a></td>
+                                <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{% if list.emp_present %}Present {% else %}Absent{%endif%}</a></td>
+                                <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp_in_time|time:"g:i A"}}</a></td>
+                                <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}"><{{list.emp_out_time|time:"g:i A"}}/a></td>
                             </tr>
                             {%endfor%}
                         </tbody>
-                        <!-- <tfoot>
-                            <tr>
-                                <th>Name</th>
-                                <th>Position</th>
-                                <th>Office</th>
-                                <th>Age</th>
-                                <th>Start date</th>
-                                <th>Salary</th>
-                            </tr>
-                        </tfoot> -->
                     </table>
                 </div>
               </div>
@@ -135,13 +121,14 @@
                 </thead>
                 <tbody>
                     {%for list in log_list%}
+                    {% include "dashboard/editDailyModal.html" %}
                     <tr>
-                        <td>{{list.emp.emp_name}}</td>
+                        <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp.emp_name}}</a></td>
                         <td>{{list.emp.emp_id}}</td>
                         <td>{% if list.emp_present %}Present {% else %}Absent{%endif%}</td>
-                        <td>{{list.date}}</td>
-                        <td>{{list.emp_in_time}}</td>
-                        <td>{{list.emp_out_time}}</td>
+                        <td>{{list.date|date:"Y-m-d"}}</td>
+                        <td>{{list.emp_in_time|time:"g:i A"}}</td>
+                        <td>{{list.emp_out_time|time:"g:i A"}}</td>
                     </tr>
                     {%endfor%}
                 </tbody>

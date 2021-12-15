@@ -10,7 +10,7 @@
           <form action="">
             <div class="row g-3 align-items-center mb-1">
               <div class="col-auto">
-                <label for="" class="col-form-label">Name: </label>
+                <label for="" class="col-form-label label-space">Name: </label>
               </div>
     
               <div class="col-auto">
@@ -20,7 +20,7 @@
 
             <div class="row g-3 align-items-center mb-1">
               <div class="col-auto">
-                <label for="" class="col-form-label">ID: </label>
+                <label for="" class="col-form-label label-space">ID: </label>
               </div>
     
               <div class="col-auto">
@@ -30,24 +30,35 @@
 
             <div class="row g-3 align-items-center mb-3">
               <div class="col-auto">
-                <label for="" class="col-form-label">Status: </label>
+                <label for="" class="col-form-label label-space">Status: </label>
               </div>
             
               <div class="col-auto">
                 <input class="form-check-input" type="radio" name="statusRadio" id="statusRadio1" {% if list.emp_present %} checked {%endif%} value="1">
-                <label class="form-check-label" for="statusRadio1" style="width: max-content;">
+                <label class="form-check-label label-space" for="statusRadio1" style="width: max-content;">
                   Present&nbsp;
                 </label>
 
                 <input class="form-check-input" type="radio" name="statusRadio" id="statusRadio1" {% if not list.emp_present %} checked {%endif%} value="0">
-                <label class="form-check-label" for="statusRadio1" style="width: max-content;">
+                <label class="form-check-label label-space" for="statusRadio1" style="width: max-content;">
                   Absent
                 </label>
               </div>
 
               <div class="row g-3 align-items-center mb-3">
                 <div class="col-auto">
-                  <label for="" class="col-form-label">In time: </label>
+                  <label for="" class="col-form-label label-space">Date: </label>
+                </div>
+      
+                <div class="col-auto">
+                  <input type="date" id="date" name="date" class="form-control" aria-describedby="date"
+                    value="{{list.date|date:"Y-m-d"}}" required>
+                </div>
+              </div>
+
+              <div class="row g-3 align-items-center mb-3">
+                <div class="col-auto">
+                  <label for="" class="col-form-label label-space">In time: </label>
                 </div>
       
                 <div class="col-auto">
@@ -58,7 +69,7 @@
 
               <div class="row g-3 align-items-center mb-3">
                 <div class="col-auto">
-                  <label for="" class="col-form-label">Out time: </label>
+                  <label for="" class="col-form-label label-space">Out time: </label>
                 </div>
       
                 <div class="col-auto">
