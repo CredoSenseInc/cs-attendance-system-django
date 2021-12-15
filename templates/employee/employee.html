@@ -8,12 +8,19 @@
 {%block mainbody%}
 
 {% include "sidebar/sidebar.html" %}
+{% include "employee/addEmpModal.html" %}
 
-<div class="content">
+<div class="content mt-2">
+    {% for message in messages %}
+    <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+      {{message}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
     <div style="overflow-x:auto;" class="card mt-3">
         <h5 class="card-header">Employee list
-            <a href="#" data-bs-toggle="modal" data-bs-target="#info-logger{{i.data_logger_id}}"><i
-                class="fas fa-user-plus" style="float: right; margin-left: 10px;" title="Logger info"></i></a>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#add-emp"><i
+                class="fas fa-user-plus" style="float: right; margin-left: 10px;" title="Add employee"></i></a>
 
         </h5>
         <div class="card-body">

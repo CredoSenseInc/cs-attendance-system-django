@@ -1,8 +1,9 @@
 from django.http import response
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from employee.models import *
 from django.db.models import Q
+from django.contrib import messages
 # Create your views here.
 
 @login_required(login_url='user/login/')
@@ -12,6 +13,33 @@ def employee_page(request):
         "emp_list" : emp_list
     }
     return render(request, 'employee/employee.html', context)
+
+@login_required(login_url='user/login/')
+def add_emp(request):
+    print(request.method)
+    if request.method == "POST":
+        print(request.POST)
+        try:
+            emp = employee()
+            emp.emp_name = request.POST['name']
+            emp.emp_contact_number = request.POST['number']
+            emp.emp_id = request.POST['id']
+            # emp.emp_finger_id = 
+            emp.emp_gender = request.POST['gender']
+            emp.emp_designation = request.POST['designation']
+            emp.emp_dept = request.POST['dept']
+            emp.emp_salary_type = request.POST['salaryType']
+            emp.emp_salary= request.POST['salary']
+            emp.emp_overtime_per_hour = request.POST['oversalary']
+            emp.save()
+            message_text = "Sucessfully added new employee."
+            messages.success(request, message_text)
+        except:
+            message_text = "Failed to add empoloyee. Please try again."
+            messages.error(request, message_text)
+
+
+    return redirect('employee')
 
 @login_required(login_url='user/login/')
 def attendance_download(request):
