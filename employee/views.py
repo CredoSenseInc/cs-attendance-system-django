@@ -2,6 +2,7 @@ from django.http import response
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from employee.models import *
+from device.models import *
 from django.db.models import Q
 from django.contrib import messages
 # Create your views here.
@@ -63,6 +64,23 @@ def update_emp(request):
             message_text = "Failed to update employee information. Please try again."
             messages.error(request, message_text)
     return redirect('employee')
+
+@login_required(login_url='user/login/')
+def scan_fingerprint(request, fid):
+    try:
+        cmd = commands()
+        cmd.device_id = deviceInfo.objects.get(device_id = "3A1931")
+        cmd.message = "Scan:"+ str(fid)
+        cmd.save()
+        message_text = "Please check the finger print device and follow instructions to scan fingeprint."
+        messages.warning(request, message_text)
+    except Exception as e:
+        print("Exception: ", e)
+        message_text = "Failed to get fingerprint from the device. Please try again."
+        messages.error(request, message_text)
+
+    return redirect('employee')
+
 
 @login_required(login_url='user/login/')
 def attendance_download(request):

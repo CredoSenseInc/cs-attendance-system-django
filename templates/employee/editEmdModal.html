@@ -45,7 +45,8 @@
                 </div>
 
                 <div class="col-auto">
-                    <button type="button" class="btn btn-info">Rescan</button>
+                    <a href="{% url 'scan-fingerprint' emp.emp_finger_id %}"><button type="button" class="btn btn-info">Rescan</button></a>
+                    
                 </div>
             </div>
 
