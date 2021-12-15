@@ -10,7 +10,13 @@
 
 {% include "sidebar/sidebar.html" %}
 
-<div class="content">
+<div class="content mt-2">
+    {% for message in messages %}
+    <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+      {{message}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
     <div class="card mt-3">
         <h5 class="card-header">Daily summary ({{current_date}})</h5>
         <div class="card-body">
@@ -94,7 +100,7 @@
                                 <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp.emp_id}}</a></td>
                                 <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{% if list.emp_present %}Present {% else %}Absent{%endif%}</a></td>
                                 <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp_in_time|time:"g:i A"}}</a></td>
-                                <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}"><{{list.emp_out_time|time:"g:i A"}}/a></td>
+                                <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp_out_time|time:"g:i A"}}</a></td>
                             </tr>
                             {%endfor%}
                         </tbody>
@@ -124,11 +130,11 @@
                     {% include "dashboard/editDailyModal.html" %}
                     <tr>
                         <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp.emp_name}}</a></td>
-                        <td>{{list.emp.emp_id}}</td>
-                        <td>{% if list.emp_present %}Present {% else %}Absent{%endif%}</td>
-                        <td>{{list.date|date:"Y-m-d"}}</td>
-                        <td>{{list.emp_in_time|time:"g:i A"}}</td>
-                        <td>{{list.emp_out_time|time:"g:i A"}}</td>
+                        <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp.emp_id}}</a></td>
+                        <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{% if list.emp_present %}Present {% else %}Absent{%endif%}</a></td>
+                        <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.date|date:"Y-m-d"}}</a></td>
+                        <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp_in_time|time:"g:i A"}}</a></td>
+                        <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp_out_time|time:"g:i A"}}</a></td>
                     </tr>
                     {%endfor%}
                 </tbody>

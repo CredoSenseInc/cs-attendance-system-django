@@ -22,6 +22,7 @@ urlpatterns = [
     path('user/', include('users.urls')),
     path('employee/', include('employee.urls')),
     path('settings/', include('settings.urls')),
+    path('attendance/', include('attendance.urls')),
 
     path('api-auth/', include('rest_framework.urls')),
     path('api-esp/', include('api_esp.urls')),

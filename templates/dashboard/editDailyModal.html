@@ -3,11 +3,12 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Update daily summary</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Update attendance log</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="">
+          <form name="atn-update" class="form" action="{%url 'update_attendance'%}" method="post">
+            {% csrf_token %}
             <div class="row g-3 align-items-center mb-1">
               <div class="col-auto">
                 <label for="" class="col-form-label label-space">Name: </label>
@@ -63,7 +64,7 @@
       
                 <div class="col-auto">
                   <input type="time" id="from" name="inTime" class="form-control" aria-describedby="FromTime"
-                    value="{{list.emp_in_time|time:"H:i"}}" required>
+                    value="{{list.emp_in_time|time:"H:i"}}">
                 </div>
               </div>
 
@@ -74,7 +75,7 @@
       
                 <div class="col-auto">
                   <input type="time" id="from" name="outTime" class="form-control" aria-describedby="FromTime"
-                    value="{{list.emp_out_time|time:"H:i"}}" required>
+                    value="{{list.emp_out_time|time:"H:i"}}">
                 </div>
               </div>
             </div>
