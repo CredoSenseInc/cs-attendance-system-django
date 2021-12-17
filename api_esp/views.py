@@ -23,7 +23,12 @@ def showCommands(request):
     elif request.method == 'POST':
         serializer = commands_serializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            if("attendance" in (request.data['message'])):
+                print("received attendance")
+                data = str(request.data['message']).split("_")
+                f_id = data[1].split(":")[1]
+                print(f_id, data[2])
+            serializer.save(isExecuted = True)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -50,7 +55,7 @@ def commandsUpdate(request, id):
     # elif request.method == 'DELETE': 
     #     data_obj.delete() 
     #     return JsonResponse({'message': 'Tutorial was deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
-
+'''
 @api_view(["GET","POST"])
 def attendance_api(request):
     if request.method == "GET":
@@ -88,3 +93,4 @@ def attendance_api_update(request, id):
     # elif request.method == 'DELETE': 
     #     data_obj.delete() 
     #     return JsonResponse({'message': 'Tutorial was deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
+'''

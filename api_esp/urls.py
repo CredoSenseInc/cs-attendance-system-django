@@ -21,7 +21,7 @@ urlpatterns = [
     path('server-to-esp/', showCommands, name='showCommands'),
     path('esp-to-server/<int:id>', commandsUpdate, name='commandsUpdate'),
     # url(r'^esp-to-server/(?P<id>[0-9]+)$', commandsUpdate),
-    path('esp-to-server-attendance/', attendance_api, name='attendance_api'),
-    path('esp-to-server-attendance-update/<int:id>', attendance_api_update, name='attendance_api_update'),
+    # path('esp-to-server-attendance/', attendance_api, name='attendance_api'),
+    # path('esp-to-server-attendance-update/<int:id>', attendance_api_update, name='attendance_api_update'),
     # url(r'^esp-to-server-attendance-update/(?P<id>[0-9]+)$', attendance_api_update),
 ]

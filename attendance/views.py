@@ -11,7 +11,7 @@ import csv
 @login_required(login_url='user/login/')
 def update_attendance(request):
     if request.method == "POST":
-        # print(request.POST)
+        print(request.POST)
         log = attendanceLog.objects.get(id=request.POST['id'])
         try:
             if(request.POST['statusRadio']) == "1":
@@ -27,20 +27,29 @@ def update_attendance(request):
             pass
 
         try:
-            log.emp_in_time = request.POST['inTime']
+            if(request.POST['inTime']!=""):
+                if(request.POST['statusRadio']) == "1":
+                    log.emp_in_time = request.POST['inTime']
+                else:
+                    log.emp_in_time = None
         except:
             pass
 
         try:
-            log.emp_out_time = request.POST['outTime']
-        except:
-            pass
+            if(request.POST['outTime']!=""):
+                if(request.POST['statusRadio']) == "1":
+                    log.emp_out_time = request.POST['outTime']
+                else:
+                    log.emp_out_time = None
+        except Exception as e:
+            print(e)
 
         try:
             log.save()
             message_text = "Sucessfully updated the log."
             messages.success(request, message_text)
-        except:
+        except Exception as e:
+            print(e)
             message_text = "Failed to update the log. Please try again."
             messages.error(request, message_text)
 
