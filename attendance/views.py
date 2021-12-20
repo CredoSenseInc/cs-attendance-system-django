@@ -95,6 +95,16 @@ def download(request):
             if (allEmpDownload):
                 print("IN IF")
                 data = attendanceLog.objects.filter(date__gte=from_date,date__lte=to_date).order_by("date", "emp__emp_name")
+                print(from_date)
+                print(to_date)
+                if(request.POST['button'] == "view"):
+                    context = {
+                        "log_list" : data,
+                        "from_date" : datetime.datetime.strptime(str(from_date), '%Y-%m-%d').date(),
+                        "to_date" : datetime.datetime.strptime(str(to_date), '%Y-%m-%d').date(),
+                    }
+                    return render(request, 'download/view.html', context)
+
                 response = HttpResponse(content_type='text/csv',headers={'Content-Disposition': 'attachment; filename='+"CredoSense_Attendance_Log_All_"+ str(from_date)+'_to_'+str(to_date)+".csv"},)
                 # print(data)
             
@@ -120,7 +130,7 @@ def download(request):
             if(allEmpDownload):
                 writer.writerow(['Employee:' , 'Everyone'])
                 writer.writerow([])
-                writer.writerow(['Name' ,'ID', 'Present Count' , 'Late Count' , 'Absent Count', 'Early leave', 'Salary type', 'Salary', 'Overtime/hr', 'Total worktime', 'Total overtime', 'Total Salary'])
+                writer.writerow(['Name' ,'ID', 'Present Count' , 'Late Count' , 'Absent Count', 'Early leave', 'Salary type', 'Salary', 'Overtime/hr', 'Total overtime', 'Total workhour', 'Total Salary'])
                 empList = employee.objects.all().order_by("emp_name")
                 print("___")
                 for i in range(len(empList)):
@@ -132,7 +142,7 @@ def download(request):
 
                     early_count = data.filter(emp = empList[i], emp_present = True, emp_out_time__lte=settings.endTime).count()
                     overtime = datetime.timedelta()
-                    worktime = datetime.timedelta()
+                    tottalworktime = datetime.timedelta()
                     total_salary = float(empList[i].emp_salary)
                     
                         
@@ -151,21 +161,22 @@ def download(request):
                         print(empList[i].emp_name,duration)
                         (h, m, s) = str(duration).split(':')
                         d = datetime.timedelta(hours=int(h), minutes=int(m), seconds=int(s))
-                        worktime += d
+                        tottalworktime += d
 
+                    worktime = tottalworktime - overtime
 
                     if(empList[i].emp_salary_type == "M"):
                         total_salary = round(float(total_salary) +  float(overtime.total_seconds()/3600) * float(empList[i].emp_overtime_per_hour) , 2)
                     elif(empList[i].emp_salary_type == "H"):
-                        total_salary = round(float(total_salary) * (float(worktime.total_seconds()/3600) - float(overtime.total_seconds()/3600)) +  float(overtime.total_seconds()/3600) * float(empList[i].emp_overtime_per_hour) , 2)
-
+                        total_salary = round(float(total_salary) * (float(worktime.total_seconds()/3600)) +  float(overtime.total_seconds()/3600) * float(empList[i].emp_overtime_per_hour) , 2)
+                    
                         
                     #     total_salary = float(total_salary) +  float(overtime.total_seconds()/3600) * float(empList[i].emp_overtime_per_hour)
 
-                    writer.writerow([empList[i].emp_name , empList[i].emp_id,  present_count , late_count , abs_count, early_count, "Monthly" if empList[i].emp_salary_type == "M" else "Hourly", empList[i].emp_salary, empList[i].emp_overtime_per_hour, str(worktime)+ " hrs" ,str(overtime) + " hrs", total_salary])
+                    writer.writerow([empList[i].emp_name , empList[i].emp_id,  present_count , late_count , abs_count, early_count, "Monthly" if empList[i].emp_salary_type == "M" else "Hourly", empList[i].emp_salary, empList[i].emp_overtime_per_hour, str(overtime) + " hrs", str(tottalworktime)+ " hrs" , total_salary])
                 writer.writerow([])
                 writer.writerow([])
-                writer.writerow(['Name' ,'ID', 'Date' , 'Status', 'In time' ,  'Out time', 'Work hour', 'Overtime'])
+                writer.writerow(['Name' ,'ID', 'Date' , 'Status', 'In time' ,  'Out time', 'Overtime', 'Total workhour',])
                 
 
                 for i in range (len(data)):
@@ -198,8 +209,9 @@ def download(request):
                     status,
                     data[i].emp_in_time,
                     data[i].emp_out_time,
+                    str(overtime),
                     duration,
-                    str(overtime)
+                    
                     ])
                    
             else:

@@ -199,7 +199,9 @@
 
 <script>
     $(document).ready(function() {
-    $('#attendanceTable').DataTable();
+    $('#attendanceTable').DataTable({
+        "order": [[ 3, "desc" ]]
+    });
 } );
 </script>
 
