@@ -12,7 +12,7 @@ def dashboard(request):
     log_list = attendanceLog.objects.filter(date__month=todays_date.month)
     daily_log_list = attendanceLog.objects.filter(date=todays_date)
     total_emp = employee.objects.all().count()
-    late_time = settings_db.objects.last()
+    settings = settings_db.objects.last()
     present_count = attendanceLog.objects.filter(date=todays_date, emp_present = True).count()
     late_count = attendanceLog.objects.filter(date=todays_date, emp_present = True, emp_in_time__gte = settings_db.objects.last().delayTime).count()
     print(settings_db.objects.last().delayTime)
@@ -26,26 +26,32 @@ def dashboard(request):
         "present_count" : present_count,
         "late_count" : late_count,
         "absent_count" : absent_count,
+        "late_time" : settings.delayTime,
+        "end_time": settings.endTime,
     }
-    # create_daily_log(request)
+    create_daily_log(request)
     return render(request, 'dashboard/dashboard.html', context)
 
 @login_required(login_url='user/login/')
 def create_daily_log(request):
     todays_date = date.today()
+    print(todays_date)
     all_emp = employee.objects.all()
     settings = settings_db.objects.last()
     offDay = str(settings.offDay).split(",")
     workDay = str(settings.workDay).split(",")
+    print(workDay)
 
-    for i in range (0, len(offDay)):
-        # print(offDay[i])
-        offDay[i] = datetime.datetime.strptime(offDay[i], '%m/%d/%Y').date()
+    for i in range (len(offDay)):
+        if(offDay[i]!=''):
+            offDay[i] = datetime.datetime.strptime(offDay[i], '%m/%d/%Y').date()
+        # offDay[i] = datetime.datetime.strptime(offDay[i], '%Y-%m-%d').date()
         # print(offDay[i])
 
-    for i in range (0, len(workDay)):
-        # print(offDay[i])
-        workDay[i] = datetime.datetime.strptime(workDay[i], '%m/%d/%Y').date()
+    for i in range (len(workDay)):
+        if(workDay[i]!=''):
+            workDay[i] = datetime.datetime.strptime(workDay[i], '%m/%d/%Y').date()
+        # workDay[i] = datetime.datetime.strptime(workDay[i], '%Y-%m-%d').date()
         # print(offDay[i])
     weekends = []
 
@@ -67,10 +73,39 @@ def create_daily_log(request):
     print(todays_date.strftime('%A'))
     print(weekends)
 
+    if (todays_date.strftime('%A') in weekends):
+        if(todays_date in workDay):
+            all_emp = employee.objects.all()
+            check_today_log = attendanceLog.objects.filter(date = todays_date).count()
+            print(check_today_log)
+            if (check_today_log == 0):
+                for i in range (len(all_emp)):
+                    attendance = attendanceLog()
+                    attendance.emp = all_emp[i]
+                    attendance.finger = all_emp[i]
+                    attendance.date = todays_date
+                    attendance.save()
+
+    elif(todays_date in offDay):
+        # weekend
+        pass
+    else:
+        all_emp = employee.objects.all()
+        check_today_log = attendanceLog.objects.filter(date = todays_date).count()
+        print(check_today_log)
+        if (check_today_log == 0):
+            for i in range (len(all_emp)):
+                attendance = attendanceLog()
+                attendance.emp = all_emp[i]
+                attendance.finger = all_emp[i]
+                attendance.date = todays_date
+                attendance.save()   
+
+
     if (todays_date.strftime('%A') in weekends or todays_date in offDay and todays_date not in workDay):
         print("Today is weekend")
     
-    elif(todays_date.strftime('%A') not in weekends or todays_date not in offDay or todays_date  in workDay):
+    elif(todays_date.strftime('%A') not in weekends or todays_date not in offDay and todays_date  in workDay):
         print("Today is workday")
         all_emp = employee.objects.all()
         check_today_log = attendanceLog.objects.filter(date = todays_date).count()

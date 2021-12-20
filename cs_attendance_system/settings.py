@@ -94,7 +94,7 @@ MESSAGE_TAGS = {
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-database = False
+database = True
 
 if(database):
     DATABASES = {

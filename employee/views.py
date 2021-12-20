@@ -69,8 +69,8 @@ def update_emp(request):
 def scan_fingerprint(request, fid):
     try:
         cmd = commands()
-        cmd.device_id = deviceInfo.objects.get(device_id = "3A1931")
-        cmd.message = "Scan:"+ str(fid)
+        cmd.device_id = deviceInfo.objects.get(device_id = "29EFA8")
+        cmd.message = "scan:"+ str(fid)
         cmd.save()
         message_text = "Please check the finger print device and follow instructions to scan fingeprint."
         messages.warning(request, message_text)

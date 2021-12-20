@@ -40,10 +40,10 @@
                     {% include "employee/editEmdModal.html" %}
                     <tr>
                         <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-emp{{emp.id}}">{{emp.emp_name}}</a></td>
-                        <td>{{emp.emp_id}}</td>
-                        <td>{{emp.emp_finger_id}}</td>
-                        <td>{{emp.emp_designation}}</td>
-                        <td>{{emp.emp_dept}}</td>
+                        <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-emp{{emp.id}}">{{emp.emp_id}}</a></td>
+                        <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-emp{{emp.id}}">{{emp.emp_finger_id}}</a></td>
+                        <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-emp{{emp.id}}">{{emp.emp_designation}}</a></td>
+                        <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-emp{{emp.id}}">{{emp.emp_dept}}</a></td>
                     </tr>
                     {%endfor%}
                 </tbody>

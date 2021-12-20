@@ -98,7 +98,23 @@
                             <tr>
                                 <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp.emp_name}}</a></td>
                                 <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp.emp_id}}</a></td>
-                                <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{% if list.emp_present %}Present {% else %}Absent{%endif%}</a></td>
+                                <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">
+
+                                    {% if list.emp_present %}
+                                    Present 
+                                    {% if list.emp_present and list.emp_in_time > late_time %}
+                                    (Late)
+                                    {% endif %}
+                                    {% if list.emp_present and list.emp_out_time < end_time %}
+                                    & Left early
+                                    {% elif list.emp_present and list.emp_out_time >= end_time %}
+                                    & Signed out
+                                    {% endif %}  
+                                    {% else %}
+                                    Absent
+                                    {%endif%}
+
+                                </a></td>
                                 <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp_in_time|time:"g:i A"}}</a></td>
                                 <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp_out_time|time:"g:i A"}}</a></td>
                             </tr>
@@ -131,7 +147,26 @@
                     <tr>
                         <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp.emp_name}}</a></td>
                         <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp.emp_id}}</a></td>
-                        <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{% if list.emp_present %}Present {% else %}Absent{%endif%}</a></td>
+                        <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">
+                            {% if list.emp_present %}
+                            Present 
+                            {% if list.emp_present and list.emp_in_time > late_time %}
+                            (Late)
+                            {% endif %}
+                            {% if list.emp_present and list.emp_out_time < end_time %}
+                            & Left early
+                            {% elif list.emp_present and list.emp_out_time >= end_time %}
+                            & Signed out
+                            {% endif %}  
+                            {% else %}
+                            Absent
+                            {%endif%}
+
+
+                        </a></td>
+                        
+
+
                         <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.date|date:"Y-m-d"}}</a></td>
                         <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp_in_time|time:"g:i A"}}</a></td>
                         <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp_out_time|time:"g:i A"}}</a></td>
