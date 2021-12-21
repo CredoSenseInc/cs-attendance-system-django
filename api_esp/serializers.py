@@ -17,6 +17,7 @@ class commands_serializer(serializers.ModelSerializer):
                 daily_log_list = attendanceLog.objects.get(finger = f_id, date=todays_date)
                 print(data['scan_time'].time())
                 if daily_log_list.emp_in_time is None:
+                    daily_log_list.emp_present = True
                     daily_log_list.emp_in_time = data['scan_time'].time()
                 
                 elif daily_log_list.emp_in_time is not None:

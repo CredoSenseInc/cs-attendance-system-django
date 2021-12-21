@@ -50,8 +50,8 @@ def add_emp(request):
 
 
             scan_fingerprint(emp.emp_finger_id, request.POST['device'], request)
-            message_text = "Please check the finger print device and follow instructions to scan fingeprint."
-            messages.warning(request, message_text)
+            # message_text = "Please check the finger print device and follow instructions to scan fingeprint."
+            # messages.warning(request, message_text)
             
         except Exception as e:
             print(e)
@@ -100,8 +100,8 @@ def scan_fingerprint(fid, device, request):
         cmd.device_id = deviceInfo.objects.get(device_id = device)
         cmd.message = "scan:"+ str(fid)
         cmd.save()
-        # message_text = "Please check the finger print device and follow instructions to scan fingeprint."
-        # messages.warning(request, message_text)
+        message_text = "Please check the finger print device and follow instructions to scan fingeprint."
+        messages.warning(request, message_text)
     except Exception as e:
         print("Exception: ", e)
         message_text = "Failed to get fingerprint from the device. Please try again."

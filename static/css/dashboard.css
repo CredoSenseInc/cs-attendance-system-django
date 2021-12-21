@@ -92,7 +92,7 @@ body {
   } */
 
 .accout-dropdown.dropdown-menu[data-bs-popper]{
-   left: 0px;
+   left: -110px!important;
 }
 
 /* .form-check-input {
