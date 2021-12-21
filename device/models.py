@@ -1,9 +1,13 @@
+import datetime
 from django.core.checks import messages
 from django.db import models
 from django.conf import settings
 import uuid
 
 from django.db.models.expressions import F
+
+# from api_esp.serializers import attendance_serializer
+# bd_time = datetime.datetime.now(tz)
 
 def generate_unique_id():
     while True:
@@ -26,4 +30,6 @@ class commands(models.Model):
     device_id = models.ForeignKey(deviceInfo, to_field='device_id', null=False, blank=False, on_delete=models.CASCADE)
     isExecuted = models.BooleanField(null = False, blank = False, default= False)
     message = models.CharField(max_length=255, blank=False, null=False)
+    scan_time = models.DateTimeField(blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True, blank=True)
 

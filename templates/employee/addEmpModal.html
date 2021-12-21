@@ -116,6 +116,21 @@
                 </div>
             </div>
 
+            <div class="row g-3 align-items-center mb-3">
+                <div class="col-auto">
+                    <label for="" class="col-form-label label-space">Fingerprint device: </label>
+                </div>
+
+                <div class="col-auto">
+                    <select class="form-select" aria-label="Default select example" name="device" required>
+                        
+                        {% for device in device_list %}
+                        <option value="{{device.device_id}}">{{device.device_name}}</option>
+                        {% endfor %}
+                      </select>
+                </div>
+            </div>
+
              
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

@@ -8,7 +8,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
-
+import datetime
 from datetime import date
 
 # Create your views here.
@@ -23,12 +23,7 @@ def showCommands(request):
     elif request.method == 'POST':
         serializer = commands_serializer(data=request.data)
         if serializer.is_valid():
-            if("attendance" in (request.data['message'])):
-                print("received attendance")
-                data = str(request.data['message']).split("_")
-                f_id = data[1].split(":")[1]
-                print(f_id, data[2])
-            serializer.save(isExecuted = True)
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

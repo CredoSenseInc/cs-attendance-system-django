@@ -5,13 +5,19 @@ from employee.models import *
 from device.models import *
 from django.db.models import Q
 from django.contrib import messages
+from attendance.models import *
+from settings.models import *
+from datetime import date
+import datetime
 # Create your views here.
 
 @login_required(login_url='user/login/')
 def employee_page(request):
     emp_list = employee.objects.all()
+    device_list = deviceInfo.objects.all()
     context = {
-        "emp_list" : emp_list
+        "emp_list" : emp_list,
+        "device_list" : device_list,
     }
     return render(request, 'employee/employee.html', context)
 
@@ -35,7 +41,20 @@ def add_emp(request):
             emp.save()
             message_text = "Sucessfully added new employee."
             messages.success(request, message_text)
-        except:
+
+            attendance = attendanceLog()
+            attendance.emp = emp
+            attendance.finger = emp
+            attendance.date = date.today()
+            attendance.save()
+
+
+            scan_fingerprint(emp.emp_finger_id, request.POST['device'], request)
+            message_text = "Please check the finger print device and follow instructions to scan fingeprint."
+            messages.warning(request, message_text)
+            
+        except Exception as e:
+            print(e)
             message_text = "Failed to add employee. Please try again."
             messages.error(request, message_text)
     return redirect('employee')
@@ -47,46 +66,68 @@ def update_emp(request):
         print(request.POST)
         try:
             emp = employee.objects.get(id = request.POST['id'])
-            emp.emp_name = request.POST['name']
-            emp.emp_contact_number = request.POST['number']
-            emp.emp_id = request.POST['id']
-            # emp.emp_finger_id = 
-            emp.emp_gender = request.POST['gender']
-            emp.emp_designation = request.POST['designation']
-            emp.emp_dept = request.POST['dept']
-            emp.emp_salary_type = request.POST['salaryType']
-            emp.emp_salary= request.POST['salary']
-            emp.emp_overtime_per_hour = request.POST['oversalary']
-            emp.save()
-            message_text = "Sucessfully updated employee information."
-            messages.success(request, message_text)
-        except:
+            if(request.POST['button'] == "rescan"):
+                scan_fingerprint(emp.emp_finger_id, request.POST['device'], request)
+            elif(request.POST['button'] == "delete"):
+                message_text = "Sucessfully removed " + emp.emp_name + " (ID: " + emp.emp_id + ") from the system."
+                emp.delete()
+                messages.success(request, message_text)
+            else:
+                # emp = employee.objects.get(id = request.POST['id'])
+                emp.emp_name = request.POST['name']
+                emp.emp_contact_number = request.POST['number']
+                emp.emp_id = request.POST['id']
+                # emp.emp_finger_id = 
+                emp.emp_gender = request.POST['gender']
+                emp.emp_designation = request.POST['designation']
+                emp.emp_dept = request.POST['dept']
+                emp.emp_salary_type = request.POST['salaryType']
+                emp.emp_salary= request.POST['salary']
+                emp.emp_overtime_per_hour = request.POST['oversalary']
+                emp.save()
+                message_text = "Sucessfully updated employee information."
+                messages.success(request, message_text)
+        except Exception as e:
+            print(e)
             message_text = "Failed to update employee information. Please try again."
             messages.error(request, message_text)
     return redirect('employee')
 
-@login_required(login_url='user/login/')
-def scan_fingerprint(request, fid):
+# @login_required(login_url='user/login/')
+def scan_fingerprint(fid, device, request):
     try:
         cmd = commands()
-        cmd.device_id = deviceInfo.objects.get(device_id = "29EFA8")
+        cmd.device_id = deviceInfo.objects.get(device_id = device)
         cmd.message = "scan:"+ str(fid)
         cmd.save()
-        message_text = "Please check the finger print device and follow instructions to scan fingeprint."
-        messages.warning(request, message_text)
+        # message_text = "Please check the finger print device and follow instructions to scan fingeprint."
+        # messages.warning(request, message_text)
     except Exception as e:
         print("Exception: ", e)
         message_text = "Failed to get fingerprint from the device. Please try again."
         messages.error(request, message_text)
 
-    return redirect('employee')
+    # return redirect('employee')
 
 
 @login_required(login_url='user/login/')
 def attendance_download(request):
+    todays_date = date.today()
+    today = date.today()
+    lastMonth = today.replace(day=1) - datetime.timedelta(days=1)
+    print(lastMonth.strftime("%m"))
+    print(todays_date.month)
+
     emp = employee.objects.values_list('emp_name', flat=True)
+    log_list = attendanceLog.objects.filter(date__month__lte=todays_date.month, date__month__gte=lastMonth.month)
+    settings = settings_db.objects.last()
     context = {
         "emp" : emp,
+        "log_list" : log_list,
+        "current_month" : (todays_date).strftime("%B"),
+        "last_month" : (lastMonth).strftime("%B"),
+        "late_time" : settings.delayTime,
+        "end_time": settings.endTime,
     }
     return render(request, 'download/download.html', context)
 

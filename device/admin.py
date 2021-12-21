@@ -10,7 +10,7 @@ class device_info_admin(admin.ModelAdmin):
 admin.site.register(deviceInfo, device_info_admin)
 
 class commands_admin(admin.ModelAdmin):
-    list_display = ['device_id', 'isExecuted', 'message']
+    list_display = ['device_id', 'isExecuted', 'message', 'timestamp']
     list_filter = ['device_id', 'isExecuted', 'message']
     search_fields = ['device_id', 'isExecuted', 'message']
     list_per_page = 20

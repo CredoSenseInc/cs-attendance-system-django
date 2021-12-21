@@ -2,6 +2,10 @@ label{
     width: 170px;
 }
 
+#attendanceTable_filter label {
+  width: auto;
+}
+
 /* .btn-outline-primary{
     color: #009145 !important;
     border-color: #ced4da !important;

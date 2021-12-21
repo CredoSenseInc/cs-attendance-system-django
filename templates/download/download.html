@@ -6,16 +6,10 @@
 <link rel="stylesheet" href="{%static ''%}css/dashboard.css">
 <link rel="stylesheet" href="{%static ''%}css/settings.css">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
-  integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ=="
-  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<link rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
-  integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw=="
-  crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.js"></script> -->
   <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
 {% endblock header %}
 {%block mainbody%}
@@ -84,7 +78,7 @@
 
         <div class="row mb-3">
           <div class="col-auto">
-            <a href="{% url 'dashboard'%}"><button type="button" class="btn btn-secondary">Cancel</button></a>
+            <!-- <a href="{% url 'dashboard'%}"><button type="button" class="btn btn-secondary">Cancel</button></a> -->
             <button type="submit" class="btn btn-info" name="button" value="view">View</button>
             <button type="submit" class="btn btn-primary" name="button" value="download">Download</button>
           </div>
@@ -92,7 +86,69 @@
 
       </form>
     </div>
+    <hr>
   </div>
+
+
+<div style="overflow-x:auto;" class="card mt-3">
+    <h5 class="card-header">Log for {{last_month}} - {{current_month}}</h5>
+    <div class="card-body">
+        <table id="attendanceTable" class="table table-striped table-hover" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>ID</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>In time</th>
+                    <th>Out time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for list in log_list%}
+                {% include "dashboard/editDailyModal.html" %}
+                <tr>
+                    <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp.emp_name}}</a></td>
+                    <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp.emp_id}}</a></td>
+                    <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">
+                      {% if list.emp_present %}
+                      Present
+                      {% if list.emp_present and list.emp_in_time > late_time %}
+                      (Late)
+                      {% endif %}
+                      {% if list.emp_present and list.emp_out_time < end_time %}
+                      & Left early
+                      {% elif list.emp_present and list.emp_out_time >= end_time %}
+                      & Signed out
+                      {% endif %}  
+                      {% else %}
+                      Absent
+                      {%endif%}
+
+
+                    </a></td>
+                    
+
+
+                    <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.date|date:"Y-m-d"}}</a></td>
+                    <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp_in_time|time:"g:i A"}}</a></td>
+                    <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp_out_time|time:"g:i A"}}</a></td>
+                </tr>
+                {%endfor%}
+            </tbody>
+            <!-- <tfoot>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Office</th>
+                    <th>Age</th>
+                    <th>Start date</th>
+                    <th>Salary</th>
+                </tr>
+            </tfoot> -->
+        </table>
+    </div>
+</div>
 
 </div>
 
@@ -123,5 +179,15 @@
       });
     } );
     </script>
+
+<script>
+  $(document).ready(function() {
+  $('#attendanceTable').DataTable({
+    "order": [[ 3, "desc" ]]
+  });
+} );
+</script> 
+
+
 
 {% endblock %}
