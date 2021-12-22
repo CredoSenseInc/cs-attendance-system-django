@@ -150,6 +150,8 @@ def download(request):
             # if(allEmpDownload):
             writer.writerow(['Employee:' , emp_name_csv])
             writer.writerow([])
+            writer.writerow(["Summary of the employee(s)"])
+            writer.writerow([])
             writer.writerow(['Name' ,'ID', 'Present Count' , 'Late Count' , 'Absent Count', 'Early leave', 'Salary type', 'Salary', 'Overtime/hr', 'Total overtime', 'Total workhour', 'Total Salary'])
             
             print("___")
@@ -186,7 +188,13 @@ def download(request):
                 worktime = tottalworktime - overtime
 
                 if(empList[i].emp_salary_type == "M"):
-                    total_salary = round(float(total_salary) +  float(overtime.total_seconds()/3600) * float(empList[i].emp_overtime_per_hour) , 2)
+                    print("Form and to")
+                    print(from_date, to_date)
+                    start = datetime.datetime.strptime(str(from_date), '%Y-%m-%d')
+                    end = datetime.datetime.strptime(str(to_date), '%Y-%m-%d')
+                    month_diff = ((end.year - start.year) * 12 + (end.month - start.month)) + 1
+                    print("Month diff", month_diff)
+                    total_salary = round(float(total_salary) * month_diff +  float(overtime.total_seconds()/3600) * float(empList[i].emp_overtime_per_hour) , 2)
                 elif(empList[i].emp_salary_type == "H"):
                     total_salary = round(float(total_salary) * (float(worktime.total_seconds()/3600)) +  float(overtime.total_seconds()/3600) * float(empList[i].emp_overtime_per_hour) , 2)
                 
@@ -195,6 +203,7 @@ def download(request):
 
                 writer.writerow([empList[i].emp_name , empList[i].emp_id,  present_count , late_count , abs_count, early_count, "Monthly" if empList[i].emp_salary_type == "M" else "Hourly", empList[i].emp_salary, empList[i].emp_overtime_per_hour, str(overtime) + " hrs", str(tottalworktime)+ " hrs" , total_salary])
             writer.writerow([])
+            writer.writerow(["Detailed log"])
             writer.writerow([])
             writer.writerow(['Name' ,'ID', 'Date' , 'Status', 'In time' ,  'Out time', 'Overtime', 'Total workhour',])
             
