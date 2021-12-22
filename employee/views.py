@@ -160,7 +160,7 @@ def scan_fingerprint(fid, device, request):
         cmd.message = "scan:"+ str(fid)
         cmd.save()
         json_id = cmd.id
-        timeout = time.time() + 40
+        timeout = time.time() + 20
         while(True):
             check = commands.objects.get(id = json_id)
             if(check.isExecuted):
