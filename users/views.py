@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout, authenticate, login, update_session_auth_hash
 from django.contrib import messages
-
+from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
+from django.contrib.auth.decorators import login_required
+import re
 # Create your views here.
 
 def user_login(request):
@@ -39,3 +41,31 @@ def user_login(request):
 def user_logout(request):
     logout(request)  # normal logout function
     return redirect('/')
+
+# user password change
+@login_required(login_url='user/login/')
+def user_password_change(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully updated')
+            return redirect('dashboard')
+        else:
+            error_message = str(form.errors)
+            print("ERRROR" , error_message)
+            error_message = error_message.replace("old_password" , "")
+            error_message = error_message.replace("new_password2" , "")
+            error_message = error_message.replace("new_password1" , "")
+            clean = re.compile('<.*?>')
+            text = re.sub(clean, '', error_message)
+            print(text.replace("." , "<br>"))
+            messages.error(request, error_message)
+            
+            return redirect('user_password_change')
+    form = PasswordChangeForm(request.user)
+    context = {
+        "form" : form
+    }
+    return render(request, 'login/pass-change.html', context)

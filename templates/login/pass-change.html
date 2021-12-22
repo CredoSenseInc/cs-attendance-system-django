@@ -1,0 +1,113 @@
+{%extends 'base/base.html'%}
+{%load static%}
+{% block header %}
+{% include "base/header.html" %}
+{% load crispy_forms_tags %}
+<title>Update Password | CredoSense</title>
+<link rel="stylesheet" href="{%static ''%}css/dashboard.css">
+<link rel="stylesheet" href="{%static ''%}css/settings.css">
+<link rel="stylesheet" href="{%static ''%}css/changepass.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
+  integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
+  integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw=="
+  crossorigin="anonymous" referrerpolicy="no-referrer" />
+{% endblock header %}
+{%block mainbody%}
+
+{% include "sidebar/sidebar.html" %}
+<div class="content mt-3">
+  {% for message in messages %}
+  <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+    {{message|safe}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+
+
+  <h4>Update Password</h4>
+  <hr>
+  <div class="row">
+    <div class="col">
+        <form method="post" enctype="multipart/form-data" class="form">
+            {% csrf_token %}
+
+            <div class="row g-3 align-items-center mb-3">
+                <div class="col-auto">
+                  <label for="" class="col-form-label">Old password: </label>
+                </div>
+      
+                <div class="col-auto">
+                    {{form.old_password}}
+                </div>
+            </div>
+
+            <div class="row g-3 align-items-center mb-3">
+                <div class="col-auto">
+                  <label for="" class="col-form-label">New password: </label>
+                </div>
+      
+                <div class="col-auto">
+                    {{form.new_password1}}
+                </div>
+            </div>
+
+            <div class="row g-3 align-items-center mb-3">
+              <div class="col-auto">
+                <label for="" class="col-form-label"></label>
+              </div>
+    
+              <div class="col-6">
+                <small id="emailHelp" class="form-text text-muted">Your password can’t be too similar to your other personal information.<br>
+                  Your password must contain at least 8 characters.<br>
+                  Your password can’t be a commonly used password.<br>
+                  Your password can’t be entirely numeric.<br></small>
+              </div>
+          </div>
+
+            <div class="row g-3 align-items-center mb-3">
+                <div class="col-auto">
+                  <label for="" class="col-form-label">New password confirmation: </label>
+                </div>
+      
+                <div class="col-auto">
+                    {{form.new_password2}}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-auto">
+                  <a href="{% url 'dashboard'%}"><button type="button" class="btn btn-secondary">Cancel</button></a>
+                  <button type="submit" class="btn btn-primary">Update password</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+  </div>
+
+</div>
+
+</div>
+<script>
+  var d = document.getElementById("settings");
+  d.className += " active";
+
+  var d = document.getElementById("settingsNav");
+  d.className += " active";
+
+  var d = document.getElementById("id_old_password");
+  d.className += " form-control";
+
+  var d = document.getElementById("id_new_password1");
+  d.className += " form-control";
+
+  var d = document.getElementById("id_new_password2");
+  d.className += " form-control";
+
+</script>
+
+{% endblock %}

@@ -3,6 +3,7 @@ from rest_framework import serializers
 from device.models import commands
 from attendance.models import attendanceLog
 from datetime import date
+from django.db.models import Q
 
 class commands_serializer(serializers.ModelSerializer):
     class Meta:
@@ -14,20 +15,38 @@ class commands_serializer(serializers.ModelSerializer):
                 todays_date = date.today()
                 messange_from_esp = str(data['message']).split(":")
                 f_id = messange_from_esp[1]
-                daily_log_list = attendanceLog.objects.get(finger = f_id, date=todays_date)
+                
+                daily_log_list = attendanceLog.objects.get(Q(emp__emp_finger_id_1 = f_id) | Q(emp__emp_finger_id_2 = f_id) | Q(emp__emp_finger_id_3 = f_id) | Q(emp__emp_finger_id_4 = f_id), date=todays_date)
                 print(data['scan_time'].time())
                 if daily_log_list.emp_in_time is None:
                     daily_log_list.emp_present = True
-                    daily_log_list.emp_in_time = data['scan_time'].time()
+                    if(daily_log_list.date == data['scan_time'].date()):
+                        daily_log_list.emp_in_time = data['scan_time'].time()
                 
                 elif daily_log_list.emp_in_time is not None:
-                    daily_log_list.emp_out_time = data['scan_time'].time()
+                    if(daily_log_list.date == data['scan_time'].date()):
+                        daily_log_list.emp_out_time = data['scan_time'].time()
 
                 daily_log_list.save()
                 data['isExecuted'] = True
+                data['server_message'] = daily_log_list.emp.emp_id
             except Exception as e:
-                print(e)
+                print("Exception from commands_serializer:", e)
+        
+        elif("info" in data['message']):
+            try:
+                todays_date = date.today()
+                messange_from_esp = str(data['message']).split(":")
+                f_id = messange_from_esp[1]
+                
+                daily_log_list = attendanceLog.objects.get(Q(emp__emp_finger_id_1 = f_id) | Q(emp__emp_finger_id_2 = f_id) | Q(emp__emp_finger_id_3 = f_id) | Q(emp__emp_finger_id_4 = f_id), date=todays_date)
+                data['isExecuted'] = True
+                data['message'] = daily_log_list.emp.emp_name
+            except Exception as e:
+                print("Exception from commands_serializer:", e)
         return data
+
+        
 
 class attendance_serializer(serializers.ModelSerializer):
     class Meta:

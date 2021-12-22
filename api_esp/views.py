@@ -24,7 +24,8 @@ def showCommands(request):
         serializer = commands_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            print(serializer.data['server_message'])
+            return Response(serializer.data['server_message'], status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT'])

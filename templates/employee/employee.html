@@ -10,6 +10,7 @@
 {% include "sidebar/sidebar.html" %}
 {% include "employee/addEmpModal.html" %}
 
+
 <div class="content mt-2">
     {% for message in messages %}
     <div class="alert {{ message.tags }} alert-dismissible" role="alert">
@@ -38,10 +39,11 @@
                     
                     {%for emp in emp_list%}
                     {% include "employee/editEmdModal.html" %}
+                    {% include "employee/loadingModal.html" %}
                     <tr>
                         <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-emp{{emp.id}}">{{emp.emp_name}}</a></td>
                         <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-emp{{emp.id}}">{{emp.emp_id}}</a></td>
-                        <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-emp{{emp.id}}">{{emp.emp_finger_id}}</a></td>
+                        <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-emp{{emp.id}}">{{emp.emp_finger_id_1}}</a></td>
                         <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-emp{{emp.id}}">{{emp.emp_designation}}</a></td>
                         <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-emp{{emp.id}}">{{emp.emp_dept}}</a></td>
                     </tr>

@@ -30,6 +30,7 @@ class commands(models.Model):
     device_id = models.ForeignKey(deviceInfo, to_field='device_id', null=False, blank=False, on_delete=models.CASCADE)
     isExecuted = models.BooleanField(null = False, blank = False, default= False)
     message = models.CharField(max_length=255, blank=False, null=False)
+    server_message = models.CharField(max_length=255, blank=True, null=True, default="")
     scan_time = models.DateTimeField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True, blank=True)
 

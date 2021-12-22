@@ -13,9 +13,15 @@ def dashboard(request):
     daily_log_list = attendanceLog.objects.filter(date=todays_date)
     total_emp = employee.objects.all().count()
     settings = settings_db.objects.last()
+    if (settings is None):
+        settings = settings_db()
+        settings.save()
+        settings = settings_db.objects.last()
+
     present_count = attendanceLog.objects.filter(date=todays_date, emp_present = True).count()
+    
     late_count = attendanceLog.objects.filter(date=todays_date, emp_present = True, emp_in_time__gte = settings_db.objects.last().delayTime).count()
-    print(settings_db.objects.last().delayTime)
+    # print(settings_db.objects.last().delayTime)
     absent_count = attendanceLog.objects.filter(date=todays_date, emp_present = False).count()
     now = datetime.datetime.now()
 
@@ -87,7 +93,7 @@ def create_daily_log(request):
                 for i in range (len(all_emp)):
                     attendance = attendanceLog()
                     attendance.emp = all_emp[i]
-                    attendance.finger = all_emp[i]
+                    attendance.finger1 = all_emp[i]
                     attendance.date = todays_date
                     attendance.save()
 
@@ -102,7 +108,7 @@ def create_daily_log(request):
             for i in range (len(all_emp)):
                 attendance = attendanceLog()
                 attendance.emp = all_emp[i]
-                attendance.finger = all_emp[i]
+                attendance.finger1 = all_emp[i]
                 attendance.date = todays_date
                 attendance.save()   
 

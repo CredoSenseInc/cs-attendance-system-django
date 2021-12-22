@@ -1,4 +1,5 @@
 <!-- Modal -->
+
 <div class="modal fade" id="edit-emp{{emp.id}}" tabindex="-1" aria-labelledby="empadd" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
@@ -7,7 +8,8 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form name="atn-update" class="form" action="{%url 'update-emp' %}" method="post">
+          <form name="atn-update" class="form" action="{%url 'update-emp' %}" method="post" id="updateForm">
+            
             {% csrf_token %}
             <div class="row g-3 align-items-center mb-3">
                 <div class="col-auto">
@@ -115,7 +117,7 @@
 
                 <div class="col-auto">
                     <div class="row">
-                        <div class="col">
+                        <div class="col-auto">
                             <select class="form-select" aria-label="Default select example" name="device" required>
                         
                                 {% for device in device_list %}
@@ -123,11 +125,77 @@
                                 {% endfor %}
                               </select>
                         </div>
+                        <!-- <div class="col">
+                           <button type="submit" class="btn btn-info" name="button" value="rescan">Scan</button></a>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row g-3 align-items-center mb-3">
+                <div class="col-auto">
+                    <div class="row">
                         <div class="col">
-                           <button type="submit" class="btn btn-info" name="button" value="rescan">Rescan</button></a>
+                            <button type="submit" class="btn {% if emp.emp_finger_id_1 %} btn-warning {% else %} btn-primary {%endif%}" name="button" value="rescan1" id="rescanID1" data-bs-toggle="modal" data-bs-target="#loading" >{% if emp.emp_finger_id_1 %}Scan Fingerprint 1{% else %}Add Fingerprint 1{%endif%}
+
+                            </button>
                         </div>
                     </div>
                 </div>
+            </div>
+
+
+            <div class="row g-3 align-items-center mb-3">
+                <div class="col-auto">
+                    <div class="row">
+                        <div class="col">
+                            <button type="submit" class="btn {% if emp.emp_finger_id_2 %} btn-warning {% else %} btn-primary {%endif%}" name="button" value="rescan2" data-bs-toggle="modal" data-bs-target="#loading" >{% if emp.emp_finger_id_2 %}Scan Fingerprint 2{% else %}Add Fingerprint 2{%endif%}</button>
+                            
+                        </div>
+                    </div>
+                </div>
+                {% if emp.emp_finger_id_2 %}
+                <div class="col-auto">
+                    <div class="row">
+                        <div class="col">
+                            <button type="submit" class="btn btn-danger" name="button" value="rescan2-delete">Delete Fingerprint 2</button>
+                            
+                        </div>
+                    </div>
+                </div>
+                {%endif%}
+            </div>
+           
+            <div class="row g-3 align-items-center mb-3">
+                <div class="col-auto">
+                    <div class="row">
+                        <div class="col">
+                            <button type="submit" class="btn {% if emp.emp_finger_id_3 %} btn-warning {% else %} btn-primary {%endif%}" name="button" value="rescan3" data-bs-toggle="modal" data-bs-target="#loading" >{% if emp.emp_finger_id_3 %}Scan Fingerprint 3{% else %}Add Fingerprint 3{%endif%}</button>
+                        </div>
+                    </div>
+                </div>
+                {% if emp.emp_finger_id_3 %}
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-danger" name="button" value="rescan3-delete">Delete Fingerprint 3</button>
+                </div>
+                {%endif%}
+            </div>
+
+            <div class="row g-3 align-items-center mb-3">
+                <div class="col-auto">
+                    <div class="row">
+                        <div class="col">
+                            <button type="submit" class="btn {% if emp.emp_finger_id_4 %} btn-warning {% else %} btn-primary {%endif%}" name="button" value="rescan4" data-bs-toggle="modal" data-bs-target="#loading" >{% if emp.emp_finger_id_4 %}Scan Fingerprint 4{% else %}Add Fingerprint 4{%endif%}</button>
+                        </div>
+                    </div>
+                </div>
+
+                {% if emp.emp_finger_id_4 %}
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-danger" name="button" value="rescan4-delete">Delete Fingerprint 4</button>
+                </div>
+                {%endif%}
             </div>
 
             <input type="text" id="from" name="id" class="form-control" aria-describedby="FromTime"
@@ -174,6 +242,3 @@
 
     </div>
 </div>
-
-
-

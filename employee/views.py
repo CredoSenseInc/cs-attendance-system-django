@@ -27,32 +27,34 @@ def add_emp(request):
     if request.method == "POST":
         print(request.POST)
         try:
+            
             emp = employee()
             emp.emp_name = request.POST['name']
             emp.emp_contact_number = request.POST['number']
             emp.emp_id = request.POST['id']
-            # emp.emp_finger_id = 
+            # emp.emp_finger_id_1 = 
             emp.emp_gender = request.POST['gender']
             emp.emp_designation = request.POST['designation']
             emp.emp_dept = request.POST['dept']
             emp.emp_salary_type = request.POST['salaryType']
             emp.emp_salary= request.POST['salary']
             emp.emp_overtime_per_hour = request.POST['oversalary']
+            
             emp.save()
+
+            deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') - 1)
             message_text = "Sucessfully added new employee."
             messages.success(request, message_text)
 
             attendance = attendanceLog()
             attendance.emp = emp
-            attendance.finger = emp
+            attendance.finger1 = emp
             attendance.date = date.today()
             attendance.save()
 
 
-            scan_fingerprint(emp.emp_finger_id, request.POST['device'], request)
-            # message_text = "Please check the finger print device and follow instructions to scan fingeprint."
-            # messages.warning(request, message_text)
-            
+            # scan_fingerprint(emp.emp_finger_id_1, request.POST['device'], request)
+
         except Exception as e:
             print(e)
             message_text = "Failed to add employee. Please try again."
@@ -66,18 +68,75 @@ def update_emp(request):
         print(request.POST)
         try:
             emp = employee.objects.get(id = request.POST['id'])
-            if(request.POST['button'] == "rescan"):
-                scan_fingerprint(emp.emp_finger_id, request.POST['device'], request)
+            if(request.POST['button'] == "rescan1"):
+                status = scan_fingerprint(emp.emp_finger_id_1, request.POST['device'], request)
+                if(status == False):
+                    raise Exception
+            
+            elif(request.POST['button'] == "rescan2"):
+                if(emp.emp_finger_id_2 == ""):
+                    emp.emp_finger_id_2 = generate_unique_fid()
+                    emp.save()
+                    deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') - 1)
+                scan_fingerprint(emp.emp_finger_id_2, request.POST['device'], request)
+            
+            elif(request.POST['button'] == "rescan3"):
+                if(emp.emp_finger_id_3 == ""):
+                    emp.emp_finger_id_3 = generate_unique_fid()
+                    emp.save()
+                    deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') - 1)
+                scan_fingerprint(emp.emp_finger_id_3, request.POST['device'], request)
+            
+            elif(request.POST['button'] == "rescan4"):
+                if(emp.emp_finger_id_4 == ""):
+                    emp.emp_finger_id_4 = generate_unique_fid()
+                    emp.save()
+                    deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') - 1)
+                scan_fingerprint(emp.emp_finger_id_4, request.POST['device'], request)
+            
+            elif(request.POST['button'] == "rescan1-delete"):
+                emp.emp_finger_id_1 = ""
+                emp.save()
+                deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') + 1)
+
+            elif(request.POST['button'] == "rescan2-delete"):
+                emp.emp_finger_id_2 = ""
+                emp.save()
+                deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') + 1)
+
+            elif(request.POST['button'] == "rescan3-delete"):
+                emp.emp_finger_id_3 = ""
+                emp.save()
+                deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') + 1)
+            
+            elif(request.POST['button'] == "rescan4-delete"):
+                emp.emp_finger_id_4 = ""
+                emp.save()
+                deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') + 1)
+
+
             elif(request.POST['button'] == "delete"):
                 message_text = "Sucessfully removed " + emp.emp_name + " (ID: " + emp.emp_id + ") from the system."
                 emp.delete()
+                deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') + 1)
                 messages.success(request, message_text)
+                if(emp.emp_finger_id_1 != ""):
+                        deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') + 1)
+
+                if(emp.emp_finger_id_2 != ""):
+                    deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') + 1)
+
+                if(emp.emp_finger_id_3 != ""):
+                    deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') + 1)
+
+                if(emp.emp_finger_id_4 != ""):
+                    deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') + 1)
             else:
                 # emp = employee.objects.get(id = request.POST['id'])
                 emp.emp_name = request.POST['name']
                 emp.emp_contact_number = request.POST['number']
                 emp.emp_id = request.POST['id']
-                # emp.emp_finger_id = 
+                # emp.emp_finger_id_1 = 
                 emp.emp_gender = request.POST['gender']
                 emp.emp_designation = request.POST['designation']
                 emp.emp_dept = request.POST['dept']
@@ -85,8 +144,8 @@ def update_emp(request):
                 emp.emp_salary= request.POST['salary']
                 emp.emp_overtime_per_hour = request.POST['oversalary']
                 emp.save()
-                message_text = "Sucessfully updated employee information."
-                messages.success(request, message_text)
+            message_text = "Sucessfully updated employee information."
+            messages.success(request, message_text)
         except Exception as e:
             print(e)
             message_text = "Failed to update employee information. Please try again."
@@ -100,8 +159,22 @@ def scan_fingerprint(fid, device, request):
         cmd.device_id = deviceInfo.objects.get(device_id = device)
         cmd.message = "scan:"+ str(fid)
         cmd.save()
-        message_text = "Please check the finger print device and follow instructions to scan fingeprint."
-        messages.warning(request, message_text)
+        json_id = cmd.id
+        timeout = time.time() + 40
+        while(True):
+            check = commands.objects.get(id = json_id)
+            if(check.isExecuted):
+                return True
+            if time.time() > timeout:
+                # message_text = "Failed to get fingerprint from the device. Please try again."
+                # messages.error(request, message_text)
+                check.isExecuted = True
+                check.save()
+                return False
+            
+        
+        # message_text = "Please check the finger print device and follow instructions to scan fingeprint."
+        # messages.warning(request, message_text)
     except Exception as e:
         print("Exception: ", e)
         message_text = "Failed to get fingerprint from the device. Please try again."
