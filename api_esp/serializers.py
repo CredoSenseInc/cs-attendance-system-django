@@ -44,6 +44,9 @@ class commands_serializer(serializers.ModelSerializer):
                 data['message'] = daily_log_list.emp.emp_name
             except Exception as e:
                 print("Exception from commands_serializer:", e)
+        else:
+            data['isExecuted'] = True
+            data['server_message'] = "Data Received"
         return data
 
         

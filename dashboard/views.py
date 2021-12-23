@@ -4,10 +4,12 @@ from attendance.models import *
 from settings.models import *
 from datetime import date
 import datetime
+# from rest_framework.authtoken.models import Token
 
 # Create your views here.
 @login_required(login_url='user/login/')
 def dashboard(request):
+    # token = Token.objects.create(user=request.user)
     todays_date = date.today()
     log_list = attendanceLog.objects.filter(date__month=todays_date.month)
     daily_log_list = attendanceLog.objects.filter(date=todays_date)

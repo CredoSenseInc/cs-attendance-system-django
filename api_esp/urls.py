@@ -18,8 +18,9 @@ from django.urls import path, include
 from .views import *
 
 urlpatterns = [
-    path('server-to-esp/', showCommands, name='showCommands'),
-    path('esp-to-server/<int:id>', commandsUpdate, name='commandsUpdate'),
+    # path('server-to-esp/', showCommands, name='showCommands'),
+    path('esp-to-server/<int:id>', commandsUpdate.as_view(), name='commandsUpdate'),
+    path('server-to-esp/', showCommands.as_view(), name='showCommands'),
     # url(r'^esp-to-server/(?P<id>[0-9]+)$', commandsUpdate),
     # path('esp-to-server-attendance/', attendance_api, name='attendance_api'),
     # path('esp-to-server-attendance-update/<int:id>', attendance_api_update, name='attendance_api_update'),
