@@ -146,7 +146,7 @@ def update_emp(request):
                 # emp = employee.objects.get(id = request.POST['id'])
                 emp.emp_name = request.POST['name']
                 emp.emp_contact_number = request.POST['number']
-                emp.emp_id = request.POST['id']
+                # emp.emp_id = request.POST['id']
                 # emp.emp_finger_id_1 = 
                 emp.emp_gender = request.POST['gender']
                 emp.emp_designation = request.POST['designation']
