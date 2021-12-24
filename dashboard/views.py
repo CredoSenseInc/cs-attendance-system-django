@@ -42,13 +42,14 @@ def dashboard(request):
         "end_time": settings.endTime,
         # "current_time" : current_time
     }
-    create_daily_log(request)
+    # create_daily_log()
     return render(request, 'dashboard/dashboard.html', context)
 
-@login_required(login_url='user/login/')
-def create_daily_log(request):
+# @login_required(login_url='user/login/')
+def create_daily_log():
     todays_date = date.today()
     print(todays_date)
+    print(datetime.datetime.now().strftime("%H:%M:%S"))
     all_emp = employee.objects.all()
     settings = settings_db.objects.last()
     offDay = str(settings.offDay).split(",")
