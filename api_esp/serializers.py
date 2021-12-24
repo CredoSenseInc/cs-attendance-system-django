@@ -17,7 +17,7 @@ class commands_serializer(serializers.ModelSerializer):
                 f_id = messange_from_esp[1]
                 
                 daily_log_list = attendanceLog.objects.get(Q(emp__emp_finger_id_1 = f_id) | Q(emp__emp_finger_id_2 = f_id) | Q(emp__emp_finger_id_3 = f_id) | Q(emp__emp_finger_id_4 = f_id), date=todays_date)
-                print(data['scan_time'].time())
+                # print(data['scan_time'].time())
                 if daily_log_list.emp_in_time is None:
                     daily_log_list.emp_present = True
                     if(daily_log_list.date == data['scan_time'].date()):
@@ -41,7 +41,8 @@ class commands_serializer(serializers.ModelSerializer):
                 
                 daily_log_list = attendanceLog.objects.get(Q(emp__emp_finger_id_1 = f_id) | Q(emp__emp_finger_id_2 = f_id) | Q(emp__emp_finger_id_3 = f_id) | Q(emp__emp_finger_id_4 = f_id), date=todays_date)
                 data['isExecuted'] = True
-                data['message'] = daily_log_list.emp.emp_name
+                text_to_send = str(daily_log_list.emp.emp_name) + " (" + str(daily_log_list.emp.emp_id) + ")" 
+                data['server_message'] = text_to_send
             except Exception as e:
                 print("Exception from commands_serializer:", e)
         else:

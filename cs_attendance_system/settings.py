@@ -14,6 +14,7 @@ from django.contrib.messages import constants as message_constants
 
 from pathlib import Path
 import os
+import pymysql
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -60,6 +61,10 @@ REST_FRAMEWORK = {
     ],
 }
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -103,9 +108,9 @@ MESSAGE_TAGS = {
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-database = True
+database = 0
 
-if(database):
+if(database == 0):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
@@ -115,7 +120,21 @@ if(database):
             'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
             'PORT': '3306',                      # Set to empty string for default. Not used with sqlite3.
         }
-    }   
+    }
+    pymysql.install_as_MySQLdb()
+
+elif(database == 1):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+            'NAME': 'credtcad_cscloud',                      # Or path to database file if using sqlite3.
+            'USER': 'credtcad_cscloud',                      # Not used with sqlite3.
+            'PASSWORD': 'HCE3U4[Q*4h3qn-?]?',                  # Not used with sqlite3.
+            'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
+            'PORT': '3306',                      # Set to empty string for default. Not used with sqlite3.
+        }
+    }
+    pymysql.install_as_MySQLdb()
 
 else:
     DATABASES = {
@@ -175,6 +194,9 @@ if DEBUG:
         os.path.join(BASE_DIR, 'static')
     ]
     STATIC_ROOT = os.path.join(BASE_DIR, 'root')
+
+    print(STATICFILES_DIRS)
+    print(STATIC_ROOT)
 else:
     STATIC_URL = '/static/'
 

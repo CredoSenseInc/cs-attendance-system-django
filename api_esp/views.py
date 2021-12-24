@@ -21,7 +21,7 @@ class showCommands(APIView):
     def get(self, request):
         five_minutes_ago = datetime.datetime.now()  + datetime.timedelta(minutes=-5)
         print(five_minutes_ago)
-        commandsToSend = commands.objects.filter(isExecuted = False, timestamp__gte=five_minutes_ago)
+        commandsToSend = commands.objects.filter(Q(isExecuted = False, timestamp__gte=five_minutes_ago) | Q(isExecuted = False, message__contains = "delete"))
         serialize = commands_serializer(commandsToSend, many = True)
         return Response(serialize.data)
 
@@ -29,7 +29,7 @@ class showCommands(APIView):
         serializer = commands_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data["server_message"], status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class commandsUpdate(APIView):

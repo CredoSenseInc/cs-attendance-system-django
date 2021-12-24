@@ -19,7 +19,7 @@ def generate_unique_fid():
     while True:
         print("Generating f_id")
         print(time.time())
-        f_id = random.randint(0, 128)
+        f_id = random.randint(1, 128)
         if not employee.objects.filter(emp_finger_id_1=f_id).exists():
             if not employee.objects.filter(emp_finger_id_2=f_id).exists():
                 if not employee.objects.filter(emp_finger_id_3=f_id).exists():
