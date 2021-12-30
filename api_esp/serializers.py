@@ -29,7 +29,8 @@ class commands_serializer(serializers.ModelSerializer):
 
                 daily_log_list.save()
                 data['isExecuted'] = True
-                data['server_message'] = daily_log_list.emp.emp_id
+                # data['server_message'] = daily_log_list.emp.emp_id
+                data['server_message'] = str(daily_log_list.emp.emp_name) + " (" + str(daily_log_list.emp.emp_id) + ")"
             except Exception as e:
                 print("Exception from commands_serializer:", e)
         
