@@ -9,6 +9,7 @@ from attendance.models import *
 from settings.models import *
 from datetime import date
 import datetime
+import calendar
 # Create your views here.
 
 @login_required(login_url='user/login/')
@@ -212,14 +213,18 @@ def scan_fingerprint(fid, device, request):
 @login_required(login_url='user/login/')
 def attendance_download(request):
     todays_date = date.today()
-    today = date.today()
-    lastMonth = today.replace(day=1) - datetime.timedelta(days=1)
-    print(lastMonth.strftime("%m"))
-    print(todays_date.month)
 
+    lastMonth = (date.today().replace(day=1) - datetime.timedelta(days =1)).replace(day = 1)
+    todayMonth = date.today().replace(day=calendar.monthrange(todays_date.year, todays_date.month)[1])
+
+    print(lastMonth)
+    print(todayMonth)
     emp = employee.objects.values_list('emp_name', flat=True)
-    log_list = attendanceLog.objects.filter(date__month__lte=todays_date.month, date__month__gte=lastMonth.month)
+
+    log_list = attendanceLog.objects.filter(date__lte=todayMonth, date__gte=lastMonth)
     settings = settings_db.objects.last()
+    
+    print("Log List " , log_list)
     context = {
         "emp" : emp,
         "log_list" : log_list,
