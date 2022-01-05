@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    'django_crontab',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -220,3 +221,9 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 '''
+# https://www.youtube.com/watch?v=8Ujs7AyE2as
+# https://pypi.org/project/django-crontab/
+# Works only on Linux
+CRONJOBS = [
+    ('1	13,20 * * *', 'cs_attendance_system.cronjob.my_scheduled_job')
+]

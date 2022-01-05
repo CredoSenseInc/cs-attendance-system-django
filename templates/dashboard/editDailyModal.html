@@ -9,27 +9,27 @@
         <div class="modal-body">
           <form name="atn-update" class="form" action="{%url 'update_attendance'%}" method="post">
             {% csrf_token %}
-            <div class="row g-3 align-items-center mb-1">
+            <div class="row align-items-center">
               <div class="col-auto">
                 <label for="" class="col-form-label label-space">Name: </label>
               </div>
     
               <div class="col-auto">
-                {{list.emp.emp_name}}
+                <b>{{list.emp.emp_name}}</b>
               </div>
             </div>
 
-            <div class="row g-3 align-items-center mb-1">
+            <div class="row align-items-center">
               <div class="col-auto">
                 <label for="" class="col-form-label label-space">ID: </label>
               </div>
     
               <div class="col-auto">
-                {{list.emp.emp_id}}
+                <b>{{list.emp.emp_id}}</b>
               </div>
             </div>
 
-            <div class="row g-3 align-items-center mb-3">
+            <div class="row align-items-center">
               <div class="col-auto">
                 <label for="" class="col-form-label label-space">Status: </label>
               </div>
@@ -46,18 +46,17 @@
                 </label>
               </div>
 
-              <div class="row g-3 align-items-center mb-3">
+              <div class="row align-items-center">
                 <div class="col-auto">
                   <label for="" class="col-form-label label-space">Date: </label>
                 </div>
       
                 <div class="col-auto">
-                  <input type="date" id="date" name="date" class="form-control" aria-describedby="date"
-                    value="{{list.date|date:"Y-m-d"}}" required>
+                    {{list.date|date:"Y-m-d"}}
                 </div>
               </div>
 
-              <div class="row g-3 align-items-center mb-3">
+              <div class="row align-items-center mb-2 mt-2">
                 <div class="col-auto">
                   <label for="" class="col-form-label label-space">In time: </label>
                 </div>
@@ -68,7 +67,7 @@
                 </div>
               </div>
 
-              <div class="row g-3 align-items-center mb-3">
+              <div class="row align-items-center mb-3">
                 <div class="col-auto">
                   <label for="" class="col-form-label label-space">Out time: </label>
                 </div>
