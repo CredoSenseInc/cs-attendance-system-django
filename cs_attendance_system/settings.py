@@ -196,8 +196,6 @@ if DEBUG:
     ]
     STATIC_ROOT = os.path.join(BASE_DIR, 'root')
 
-    print(STATICFILES_DIRS)
-    print(STATIC_ROOT)
 else:
     STATIC_URL = '/static/'
 

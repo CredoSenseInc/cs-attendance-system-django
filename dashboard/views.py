@@ -13,6 +13,10 @@ def dashboard(request):
     todays_date = date.today()
     log_list = attendanceLog.objects.filter(date__month=todays_date.month)
     daily_log_list = attendanceLog.objects.filter(date=todays_date)
+    present_emp = daily_log_list.filter(emp_present = True)
+    abesent_emp = daily_log_list.filter(emp_present = False)
+    late_emp = daily_log_list.filter(date=todays_date, emp_present = True, emp_in_time__gte = settings_db.objects.last().delayTime)
+
     total_emp = employee.objects.all().count()
     settings = settings_db.objects.last()
     if (settings is None):
@@ -40,6 +44,10 @@ def dashboard(request):
         "absent_count" : absent_count,
         "late_time" : settings.delayTime,
         "end_time": settings.endTime,
+        "present_emp" : present_emp,
+        "abesent_emp" : abesent_emp,
+        "late_emp" : late_emp,
+
         # "current_time" : current_time
     }
     # create_daily_log()

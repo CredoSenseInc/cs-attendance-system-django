@@ -228,10 +228,18 @@ body {
 
 .page-item.active .page-link {
   color: #fff;
-  background-color: #009145;
-  border-color: #009145;
+  background-color: #293549;
+  border-color: #293549;
 }
 
 .label-space{
   width: 170px;
+}
+
+.card-header {
+ background-color: #293549;
+}
+
+h5.card-header{
+  color: #fff;
 }

@@ -1,0 +1,45 @@
+<div class="modal fade" id="dailyLateModal" tabindex="-1" aria-labelledby="dailyLateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dailyPresentModalLabel">Daily Late List</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table id="lateTableDaily" class="table table-striped table-hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for list in late_emp%}
+                        <tr>
+                            <td>{{list.emp.emp_name}}</td>
+                            <td>{{list.emp.emp_id}}</td>
+                        </tr>
+                        {%endfor%}
+
+                        
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+        $('#lateTableDaily').DataTable({
+            "paging": false,
+            "ordering": false,
+            "info": false,
+            "dom": '<lf<t>ip>'
+
+        });
+    });
+</script>
