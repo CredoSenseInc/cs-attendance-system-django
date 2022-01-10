@@ -135,7 +135,7 @@ def download(request):
                 emp_id = str(request.POST['empname']).split("(")
                 emp_id = emp_id[1].replace(")" , "")
                 print("Emp ID" , emp_id)
-                data = attendanceLog.objects.filter(emp = emp_id, date__gte=from_date,date__lte=to_date)
+                data = attendanceLog.objects.filter(emp = emp_id, date__gte=from_date,date__lte=to_date).order_by("date", "emp__emp_name")
                 if(request.POST['button'] == "view"):
                     context = {
                         "log_list" : data,
