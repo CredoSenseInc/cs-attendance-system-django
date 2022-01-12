@@ -5,6 +5,7 @@ class settings_db(models.Model):
     startTime = models.TimeField(null=False, blank=False, default="08:00:00")
     endTime = models.TimeField(null=False, blank=False, default="17:00:00")
     delayTime = models.TimeField(null=False, blank=False, default="08:15:59")
+    overtime_count_after = models.TimeField(null=False, blank=False, default="17:20:00")
     offDay = models.TextField(blank=True, null=False)
     workDay = models.TextField(blank=True, null=False)
     week_saturday = models.BooleanField(blank=False, null=False, default=False)

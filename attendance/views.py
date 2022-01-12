@@ -10,6 +10,10 @@ from employee.models import employee
 from settings.models import *
 from django.http import HttpResponseRedirect
 import calendar
+import os
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
+
+import pandas as pd
 # Create your views here.
 @login_required(login_url='user/login/')
 def update_attendance(request):
@@ -162,53 +166,76 @@ def download(request):
             writer.writerow(['Employee:' , emp_name_csv])
             writer.writerow([])
             writer.writerow(["Summary of the employee(s)"])
-            writer.writerow([])
-            writer.writerow(['Name' ,'ID', 'Present Count' , 'Late Count' , 'Absent Count', 'Early leave', 'Salary type', 'Salary', 'Overtime/hr', 'Total overtime', 'Total workhour', 'Total Salary'])
-            
-            print("___")
-            for i in range(len(empList)):
-                try:
-                    present_count = data.filter(emp = empList[i], emp_present = True).count()
-                    abs_count = data.filter(emp = empList[i], emp_present = False).count()
-                    late_count = data.filter(emp = empList[i], emp_present = True, emp_in_time__gte=settings.delayTime).count()
-                    early_count = data.filter(emp = empList[i], emp_present = True, emp_out_time__lte=settings.endTime).count()
-                    overtime = datetime.timedelta()
-                    tottalworktime = datetime.timedelta()
-                    total_salary = float(empList[i].emp_salary)
-                    overtime_data = data.filter(emp = empList[i], emp_present = True, emp_out_time__gte = settings.endTime)
 
-                    for j in range(len(overtime_data)):
-                        time_diff = datetime.datetime.combine(overtime_data[j].date, overtime_data[j].emp_out_time) - datetime.datetime.combine(overtime_data[j].date, settings.endTime)
-                        (h, m, s) = str(time_diff).split(':')
-                        d = datetime.timedelta(hours=int(h), minutes=int(m), seconds=int(s))
-                        overtime += d
+            start = datetime.datetime.strptime(str(from_date), '%Y-%m-%d')
+            end = datetime.datetime.strptime(str(to_date), '%Y-%m-%d')
+            month_list = pd.date_range(start, end, freq='MS').to_pydatetime().tolist()
+            print("Month List" , month_list) 
+            # for thiselem,nextelem in zip(month_list, month_list[1 : ] + month_list[ : 1]):
+            for q in range(len(month_list)):
+                last_date = calendar.monthrange(month_list[q].year , month_list[q].month)
+                last_date = month_list[q].replace(day = last_date[1])
 
-                    work_data = data.filter(emp = empList[i], emp_present = True).exclude(emp_in_time=None).exclude(emp_out_time=None)
-                    for k in range(len(work_data)):
-                        duration = str(datetime.datetime.combine(work_data[k].date, work_data[k].emp_out_time) - datetime.datetime.combine(work_data[k].date,work_data[k].emp_in_time))
-                        print(empList[i].emp_name,duration)
-                        (h, m, s) = str(duration).split(':')
-                        d = datetime.timedelta(hours=int(h), minutes=int(m), seconds=int(s))
-                        tottalworktime += d
-                    worktime = tottalworktime - overtime
 
-                    if(empList[i].emp_salary_type == "M"):
-                        print("Form and to")
-                        print(from_date, to_date)
-                        start = datetime.datetime.strptime(str(from_date), '%Y-%m-%d')
-                        end = datetime.datetime.strptime(str(to_date), '%Y-%m-%d')
-                        month_diff = ((end.year - start.year) * 12 + (end.month - start.month)) + 1
-                        print("Month diff", month_diff)
-                        total_salary = round(float(total_salary) * month_diff +  float(overtime.total_seconds()/3600) * float(empList[i].emp_overtime_per_hour) , 2)
-                    elif(empList[i].emp_salary_type == "H"):
-                        total_salary = round(float(total_salary) * (float(worktime.total_seconds()/3600)) +  float(overtime.total_seconds()/3600) * float(empList[i].emp_overtime_per_hour) , 2)
-                    
+                writer.writerow([])
+                writer.writerow([month_list[q].strftime("%Y-%m")])
+                writer.writerow(['Name' ,'ID', 'Present Count' , 'Late Count' , 'Absent Count', 'Early leave', 'Salary type', 'Salary', 'Overtime/hr', 'Total overtime', 'Total workhour', 'Total Salary'])
+                for i in range(len(empList)):
+                    try:
+                        print("Current and last")
+                        print(month_list[q],last_date)
+                        present_count = data.filter(emp = empList[i], emp_present = True, date__gte=month_list[q].date(), date__lte = last_date.date()).count()
+                        abs_count = data.filter(emp = empList[i], emp_present = False, date__gte=month_list[q].date(), date__lte = last_date.date()).count()
+                        late_count = data.filter(emp = empList[i], emp_present = True, date__gte=month_list[q].date(), date__lte = last_date.date(), emp_in_time__gte=settings.delayTime).count()
+                        early_count = data.filter(emp = empList[i], emp_present = True, date__gte=month_list[q].date(), date__lte = last_date.date(), emp_out_time__lte=settings.endTime).count()
+                        overtime = datetime.timedelta()
+                        tottalworktime = datetime.timedelta()
+                        total_salary = float(empList[i].emp_salary)
+                        overtime_data = data.filter(emp = empList[i], emp_present = True, date__gte=month_list[q].date(), date__lte = last_date.date(), emp_out_time__gte = settings.overtime_count_after)
                         
-                    #     total_salary = float(total_salary) +  float(overtime.total_seconds()/3600) * float(empList[i].emp_overtime_per_hour)
+                        for j in range(len(overtime_data)):
+                            time_diff = datetime.datetime.combine(overtime_data[j].date, overtime_data[j].emp_out_time) - datetime.datetime.combine(overtime_data[j].date, settings.endTime)
+                            (h, m, s) = str(time_diff).split(':')
+                            d = datetime.timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+                            overtime += d
 
-                    writer.writerow([empList[i].emp_name , empList[i].emp_id,  present_count , late_count , abs_count, early_count, "Monthly" if empList[i].emp_salary_type == "M" else "Hourly", empList[i].emp_salary, empList[i].emp_overtime_per_hour, str(overtime) + " hrs", str(tottalworktime)+ " hrs" , total_salary])
-                except:
-                    pass
+                        work_data = data.filter(emp = empList[i], emp_present = True, date__gte=month_list[q].date(), date__lte = last_date.date()).exclude(emp_in_time=None).exclude(emp_out_time=None)
+                        
+                        for k in range(len(work_data)):
+                            duration = str(datetime.datetime.combine(work_data[k].date, work_data[k].emp_out_time) - datetime.datetime.combine(work_data[k].date,work_data[k].emp_in_time))
+                            print("duration",duration)
+                            print("duration",type(duration))
+                            (h, m, s) = str(duration).split(':')
+                            d = datetime.timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+                            tottalworktime += d
+
+                        tottalworktimeinhrs = round(tottalworktime.total_seconds()/3600 , 2)
+                        worktime = tottalworktime - overtime
+                                             
+                        
+    
+
+                        if(empList[i].emp_salary_type == "M"):
+                            total_salary = round(float(total_salary) +  float(overtime.total_seconds()/3600) * float(empList[i].emp_overtime_per_hour) , 2)
+                            # print("Salary ", total_salary)
+                        elif(empList[i].emp_salary_type == "H"):
+                            total_salary = round(float(total_salary) * (float(worktime.total_seconds()/3600)) +  float(overtime.total_seconds()/3600) * float(empList[i].emp_overtime_per_hour) , 2)
+
+
+
+                        if(present_count == 0 and abs_count == 0 and late_count == 0 and early_count == 0):
+                            pass
+                        else:
+                            writer.writerow([empList[i].emp_name , empList[i].emp_id,  present_count , late_count , abs_count, early_count, "Monthly" if empList[i].emp_salary_type == "M" else "Hourly", empList[i].emp_salary, empList[i].emp_overtime_per_hour, str(overtime) + " hrs", str(tottalworktimeinhrs)+ " hrs" , total_salary])
+
+
+                    except Exception as e:
+                        print(e)
+                        pass
+
+
+
+
             writer.writerow([])
             writer.writerow(["Detailed log"])
             writer.writerow([])
@@ -224,8 +251,9 @@ def download(request):
                     # print(datetime.datetime.combine(data[i].date, data[i].emp_out_time) - datetime.datetime.combine(data[i].date, data[i].emp_in_time))
                     duration = str(datetime.datetime.combine(data[i].date, data[i].emp_out_time) - datetime.datetime.combine(data[i].date, data[i].emp_in_time)) + " hrs"
                     
-                    if(data[i].emp_out_time > settings.endTime):
+                    if(data[i].emp_out_time > settings.overtime_count_after):
                         overtime = str(datetime.datetime.combine(data[i].date, data[i].emp_out_time) - datetime.datetime.combine(data[i].date, settings.endTime)) + " hrs"
+
                     if(data[i].emp_present):
                         status = "Present"
                         if(data[i].emp_in_time > settings.delayTime):

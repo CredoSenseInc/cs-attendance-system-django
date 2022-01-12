@@ -54,12 +54,23 @@
 
         <div class="row g-3 align-items-center mb-3">
           <div class="col-auto">
-            <label for="" class="col-form-label">Count delay after: </label>
+            <label for="" class="col-form-label">Count late after: </label>
           </div>
 
           <div class="col-auto">
             <input type="time" id="delay-time" name="delay-time" class="form-control" aria-describedby="delayTime"
               value="{{settings.delayTime|time:"H:i" }}">
+          </div>
+        </div>
+
+        <div class="row g-3 align-items-center mb-3">
+          <div class="col-auto">
+            <label for="" class="col-form-label">Count overtime after: </label>
+          </div>
+
+          <div class="col-auto">
+            <input type="time" id="delay-time" name="overtime-after" class="form-control" aria-describedby="delayTime"
+              value="{{settings.overtime_count_after|time:"H:i" }}">
           </div>
         </div>
 
