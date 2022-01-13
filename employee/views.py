@@ -1,3 +1,4 @@
+from email import message
 from django.http import response
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -70,28 +71,48 @@ def update_emp(request):
         try:
             emp = employee.objects.get(id = request.POST['id'])
             if(request.POST['button'] == "rescan1"):
-                scan_fingerprint(emp.emp_finger_id_1, request.POST['device'], request)
+                device = deviceInfo.objects.get(device_id = request.POST['device'])
+                if(device.device_emp_count > 0):
+                    scan_fingerprint(emp.emp_finger_id_1, request.POST['device'], request)
+                else:
+                    message_text = "Failed to update employee information. Finger print device reached max capacity."
+                    messages.error(request, message_text)
             
             elif(request.POST['button'] == "rescan2"):
-                if(emp.emp_finger_id_2 == ""):
-                    emp.emp_finger_id_2 = generate_unique_fid()
-                    emp.save()
-                    deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') - 1)
-                scan_fingerprint(emp.emp_finger_id_2, request.POST['device'], request)
+                device = deviceInfo.objects.get(device_id = request.POST['device'])
+                if(device.device_emp_count > 0):
+                    if(emp.emp_finger_id_2 == ""):
+                        emp.emp_finger_id_2 = generate_unique_fid()
+                        emp.save()
+                        deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') - 1)
+                    scan_fingerprint(emp.emp_finger_id_2, request.POST['device'], request)
+                else:
+                    message_text = "Failed to update employee information. Finger print device reached max capacity."
+                    messages.error(request, message_text)
             
             elif(request.POST['button'] == "rescan3"):
-                if(emp.emp_finger_id_3 == ""):
-                    emp.emp_finger_id_3 = generate_unique_fid()
-                    emp.save()
-                    deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') - 1)
-                scan_fingerprint(emp.emp_finger_id_3, request.POST['device'], request)
+                device = deviceInfo.objects.get(device_id = request.POST['device'])
+                if(device.device_emp_count > 0):
+                    if(emp.emp_finger_id_3 == ""):
+                        emp.emp_finger_id_3 = generate_unique_fid()
+                        emp.save()
+                        deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') - 1)
+                    scan_fingerprint(emp.emp_finger_id_3, request.POST['device'], request)
+                else:
+                    message_text = "Failed to update employee information. Finger print device reached max capacity."
+                    messages.error(request, message_text)
             
             elif(request.POST['button'] == "rescan4"):
-                if(emp.emp_finger_id_4 == ""):
-                    emp.emp_finger_id_4 = generate_unique_fid()
-                    emp.save()
-                    deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') - 1)
-                scan_fingerprint(emp.emp_finger_id_4, request.POST['device'], request)
+                device = deviceInfo.objects.get(device_id = request.POST['device'])
+                if(device.device_emp_count > 0):
+                    if(emp.emp_finger_id_4 == ""):
+                        emp.emp_finger_id_4 = generate_unique_fid()
+                        emp.save()
+                        deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') - 1)
+                    scan_fingerprint(emp.emp_finger_id_4, request.POST['device'], request)
+                else:
+                    message_text = "Failed to update employee information. Finger print device reached max capacity."
+                    messages.error(request, message_text)
             
             elif(request.POST['button'] == "rescan1-delete"):
                 delete_fingerprint([emp.emp_finger_id_1])
