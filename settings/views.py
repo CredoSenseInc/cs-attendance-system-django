@@ -4,6 +4,8 @@ from device.models import deviceInfo, firmware, commands
 from settings.models import settings_db
 from django.contrib import messages
 import semantic_version
+
+from django.db.models import Q
 # Create your views here.
 
 @login_required(login_url='user/login/')
@@ -14,15 +16,30 @@ def settings(request):
     if(settings is None):
         settings = settings_db()
         settings.save()
+
+
+    update_all_button = False
+    all_updated = True
+
+    updateCommands = commands.objects.filter(Q(isExecuted = False, message__contains = "update"))
     # print(semantic_version.Version(str(firmware_version.version)))
     for d in device:
         if (semantic_version.Version(str(firmware_version.version)) > semantic_version.Version(str(d.firmware_version))):
             d.update_available = True
+            all_updated = False
+        
+        check_update = updateCommands.filter(device_id = d)
+        if len(check_update) > 0:
+            d.is_updating = True
+            update_all_button = True
+
 
     context = {
         "settings" : settings,
         "device" : device,
-        "firmware_version" : firmware_version
+        "firmware_version" : firmware_version,
+        "update_all_button" : update_all_button,
+        "all_updated" : all_updated
     }
     return render(request, 'settings/settings.html', context)
 
@@ -30,19 +47,38 @@ def settings(request):
 def firmware_update(request):
     print(request.POST)
     if request.method == "POST":
-        try:
-            firmware_version = firmware.objects.last()
-            cmd = commands()
-            cmd.device_id = deviceInfo.objects.get(device_id = request.POST["id"])
-            cmd.message = "update:"+ str(firmware_version.url)
-            cmd.save()
+        if request.POST["button"] == "firmware-update-all":
+            try:
+                firmware_version = firmware.objects.last()
+                all_device = deviceInfo.objects.all()
+                for device in all_device:
+                    if (semantic_version.Version(str(firmware_version.version)) > semantic_version.Version(str(device.firmware_version))):
+                        cmd = commands()
+                        cmd.device_id = deviceInfo.objects.get(device_id = device.device_id)
+                        cmd.message = "update:"+ str(firmware_version.url)
+                        cmd.save()
+                
+                message_text = "Firmware update request has been sent to the device. Please wait for the device to get updated."
+                messages.success(request, message_text)
+            except Exception as e:
+                print(e)
+                message_text = "Failed to update firmware. Please try again."
+                messages.error(request, message_text)
 
-            message_text = "Firmware update request has been sent to the device. Please wait for the device to get updated."
-            messages.success(request, message_text)
-        except Exception as e:
-            print(e)
-            message_text = "Failed to update firmware. Please try again."
-            messages.error(request, message_text)
+        else:
+            try:
+                firmware_version = firmware.objects.last()
+                cmd = commands()
+                cmd.device_id = deviceInfo.objects.get(device_id = request.POST["id"])
+                cmd.message = "update:"+ str(firmware_version.url)
+                cmd.save()
+
+                message_text = "Firmware update request has been sent to the device. Please wait for the device to get updated."
+                messages.success(request, message_text)
+            except Exception as e:
+                print(e)
+                message_text = "Failed to update firmware. Please try again."
+                messages.error(request, message_text)
 
     return redirect('settings')
 

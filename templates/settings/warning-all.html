@@ -1,25 +1,21 @@
 <!-- Modal -->
 
-<div class="modal fade" id="update{{d.device_id}}" tabindex="-1" aria-labelledby="empadd" aria-hidden="true">
+<div class="modal fade" id="warning-all" tabindex="-1" aria-labelledby="empadd" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Device firmware update confirmation</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Device firmware update confirmation for all device</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            Please make sure the device is powerd on and connected to Wi-Fi. Diconecting Wi-Fi or power failure might render the fingerprint device unfunctional.<br><br>Do you want to proceed?
+            Please make sure all the devices is powerd on and connected to Wi-Fi. Diconecting Wi-Fi or power failure might render the fingerprint devices unfunctional.<br><br>Do you want to proceed?
           <form name="atn-update" class="form mt-2" action="{%url 'firmware_update' %}" method="post" id="updateForm">
             
             {% csrf_token %}
-            
-
-            <input type="text" id="from" name="id" class="form-control" aria-describedby="FromTime"
-            value="{{d.device_id}}" required hidden>
              
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="submit" class="btn btn-primary" name="button" value="firmware-update">Update</button>
+              <button type="submit" class="btn btn-primary" name="button" value="firmware-update-all">Update all</button>
             </div>
           </form>
         </div>
