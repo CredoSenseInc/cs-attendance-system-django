@@ -1,6 +1,6 @@
 from rest_framework import serializers
 # from .models import *
-from device.models import commands
+from device.models import commands, deviceInfo
 from attendance.models import attendanceLog
 from datetime import date
 from django.db.models import Q
@@ -46,6 +46,18 @@ class commands_serializer(serializers.ModelSerializer):
                 data['server_message'] = text_to_send
             except Exception as e:
                 print("Exception from commands_serializer:", e)
+
+
+        elif("ver" in data['message']):
+            try:
+                data['isExecuted'] = True
+                data['server_message'] = "Data Received"
+                device = deviceInfo.objects.get(device_id = data['device_id'])
+                device.firmware_version = str(data['message']).split(":")[1]
+                device.save()
+            except Exception as e:
+                print("Exception from commands_serializer:", e)
+
         else:
             data['isExecuted'] = True
             data['server_message'] = "Data Received"

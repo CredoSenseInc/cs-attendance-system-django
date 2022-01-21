@@ -50,7 +50,7 @@ def dashboard(request):
 
         # "current_time" : current_time
     }
-    # create_daily_log()
+    create_daily_log()
     return render(request, 'dashboard/dashboard.html', context)
 
 # @login_required(login_url='user/login/')

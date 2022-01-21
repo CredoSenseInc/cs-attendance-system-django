@@ -1,10 +1,12 @@
+from contextlib import nullcontext
 import datetime
+from http.cookies import Morsel
 from django.core.checks import messages
 from django.db import models
 from django.conf import settings
 import uuid
-
 from django.db.models.expressions import F
+from importlib_metadata import version
 
 # from api_esp.serializers import attendance_serializer
 # bd_time = datetime.datetime.now(tz)
@@ -22,9 +24,17 @@ class deviceInfo(models.Model):
     device_deptartment = models.CharField(max_length=255, blank=False, null=False)
     device_location = models.CharField(max_length=255, blank=False, null=False)
     device_emp_count = models.IntegerField(default = 0, blank=False, null=False)
-
+    firmware_version = models.CharField(max_length=255, blank=False, null=False)
     def __str__(self):
             return f"{self.device_id}"
+
+
+class firmware(models.Model):
+    version = models.CharField(max_length=255, null=False, blank=False)
+    url = models.CharField(max_length=255, null=False, blank=False)
+    timestamp = models.DateTimeField(auto_now_add=True, blank=True)
+    changelog = models.CharField(max_length=255, null=True, blank=True)
+
 
 class commands(models.Model):
     device_id = models.ForeignKey(deviceInfo, to_field='device_id', null=False, blank=False, on_delete=models.CASCADE)

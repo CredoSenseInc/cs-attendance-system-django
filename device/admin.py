@@ -15,3 +15,10 @@ class commands_admin(admin.ModelAdmin):
     search_fields = ['device_id', 'isExecuted', 'message']
     list_per_page = 20
 admin.site.register(commands, commands_admin)
+
+class firmware_admin(admin.ModelAdmin):
+    list_display = ['version', 'timestamp']
+    list_filter = ['version', 'url']
+    search_fields = ['version', 'url']
+    list_per_page = 20
+admin.site.register(firmware, firmware_admin)

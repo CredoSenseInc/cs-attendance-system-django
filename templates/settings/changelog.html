@@ -1,0 +1,49 @@
+<!-- Modal -->
+
+<div class="modal fade" id="whatnew" tabindex="-1" aria-labelledby="empadd" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Firmware Version: {{firmware_version.version}}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            Changelog:<br>
+            {{firmware_version.changelog|safe}}
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </form>
+        </div>
+        
+      </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <!-- Delete Modal -->
+            <div class="modal fade" id="DeleteModal{{emp.id}}" tabindex="-1" aria-labelledby="DeleteExampleModalLabel{{emp.id}}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="DeleteExampleModalLabel{{emp.id}}">Remove {{emp.emp_name}} (ID: {{emp.id}})?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                    Are you sure you want to remove {{emp.emp_name}} (ID: {{emp.id}})? Once deleted the employee records will also be deleted from the system. This action cannot be reverted, please proceed with caution. 
+                    </div>
+                    <form method="POST" action = "{%url 'update-emp' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input hidden type="text" class="form-control" id="emp-id" name="id" required value="{{emp.id}}">
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger" name="button" value="delete">Delete</button>
+                    </div>
+                    </form>
+                </div>
+                </div>
+            </div>
+
+    </div>
+</div>

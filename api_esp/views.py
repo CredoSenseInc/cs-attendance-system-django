@@ -21,7 +21,7 @@ class showCommands(APIView):
     def get(self, request):
         five_minutes_ago = datetime.datetime.now()  + datetime.timedelta(minutes=-5)
         print(five_minutes_ago)
-        commandsToSend = commands.objects.filter(Q(isExecuted = False, timestamp__gte=five_minutes_ago) | Q(isExecuted = False, message__contains = "delete"))
+        commandsToSend = commands.objects.filter(Q(isExecuted = False, timestamp__gte=five_minutes_ago) | Q(isExecuted = False, message__contains = "delete") | Q(isExecuted = False, message__contains = "update"))
         serialize = commands_serializer(commandsToSend, many = True)
         return Response(serialize.data)
 

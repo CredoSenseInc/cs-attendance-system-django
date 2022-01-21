@@ -1,19 +1,50 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from device.models import deviceInfo, firmware, commands
 from settings.models import settings_db
 from django.contrib import messages
+import semantic_version
 # Create your views here.
 
 @login_required(login_url='user/login/')
 def settings(request):
     settings = settings_db.objects.last()
-    
+    device = deviceInfo.objects.all()
+    firmware_version = firmware.objects.last()
     if(settings is None):
         settings = settings_db()
         settings.save()
+    # print(semantic_version.Version(str(firmware_version.version)))
+    for d in device:
+        if (semantic_version.Version(str(firmware_version.version)) > semantic_version.Version(str(d.firmware_version))):
+            d.update_available = True
 
-    context = {"settings" : settings}
+    context = {
+        "settings" : settings,
+        "device" : device,
+        "firmware_version" : firmware_version
+    }
     return render(request, 'settings/settings.html', context)
+
+@login_required(login_url='user/login/')
+def firmware_update(request):
+    print(request.POST)
+    if request.method == "POST":
+        try:
+            firmware_version = firmware.objects.last()
+            cmd = commands()
+            cmd.device_id = deviceInfo.objects.get(device_id = request.POST["id"])
+            cmd.message = "update:"+ str(firmware_version.url)
+            cmd.save()
+
+            message_text = "Firmware update request has been sent to the device. Please wait for the device to get updated."
+            messages.success(request, message_text)
+        except Exception as e:
+            print(e)
+            message_text = "Failed to update firmware. Please try again."
+            messages.error(request, message_text)
+
+    return redirect('settings')
 
 @login_required(login_url='user/login/')
 def update(request):
