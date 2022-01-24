@@ -63,7 +63,10 @@ class commands_serializer(serializers.ModelSerializer):
             data['server_message'] = "Data Received"
         return data
 
-        
+class commands_serializer_pull(serializers.ModelSerializer):
+    class Meta:
+        model = commands
+        fields = '__all__'
 
 class attendance_serializer(serializers.ModelSerializer):
     class Meta:

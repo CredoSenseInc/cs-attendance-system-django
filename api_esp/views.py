@@ -1,3 +1,4 @@
+from functools import partial
 from django.shortcuts import render
 from api_esp.serializers import *
 from device.models import commands
@@ -44,7 +45,7 @@ class commandsUpdate(APIView):
     
         if request.method == 'PUT': 
             data = JSONParser().parse(request) 
-            serializer = commands_serializer(data_obj, data=data) 
+            serializer = commands_serializer_pull(data_obj, data=data, partial=True) 
             if serializer.is_valid(): 
                 serializer.save() 
                 return JsonResponse(serializer.data) 
