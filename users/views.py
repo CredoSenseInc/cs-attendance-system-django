@@ -60,7 +60,7 @@ def user_password_change(request):
             error_message = error_message.replace("new_password1" , "")
             clean = re.compile('<.*?>')
             text = re.sub(clean, '', error_message)
-            print(text.replace("." , "<br>"))
+            # print(text.replace("." , "<br>"))
             messages.error(request, error_message)
             
             return redirect('user_password_change')
