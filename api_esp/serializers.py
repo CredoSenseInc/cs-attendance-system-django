@@ -18,19 +18,25 @@ class commands_serializer(serializers.ModelSerializer):
                 
                 daily_log_list = attendanceLog.objects.get(Q(emp__emp_finger_id_1 = f_id) | Q(emp__emp_finger_id_2 = f_id) | Q(emp__emp_finger_id_3 = f_id) | Q(emp__emp_finger_id_4 = f_id), date=todays_date)
                 # print(data['scan_time'].time())
-                if daily_log_list.emp_in_time is None:
-                    daily_log_list.emp_present = True
-                    if(daily_log_list.date == data['scan_time'].date()):
-                        daily_log_list.emp_in_time = data['scan_time'].time()
-                
-                elif daily_log_list.emp_in_time is not None:
-                    if(daily_log_list.date == data['scan_time'].date()):
-                        daily_log_list.emp_out_time = data['scan_time'].time()
+                if data['scan_time'].date() == todays_date:
+                    if daily_log_list.emp_in_time is None:
+                        daily_log_list.emp_present = True
+                        if(daily_log_list.date == data['scan_time'].date()):
+                            daily_log_list.emp_in_time = data['scan_time'].time()
+                    
+                    elif daily_log_list.emp_in_time is not None:
+                        if(daily_log_list.date == data['scan_time'].date()):
+                            daily_log_list.emp_out_time = data['scan_time'].time()
 
-                daily_log_list.save()
-                data['isExecuted'] = True
-                # data['server_message'] = daily_log_list.emp.emp_id
-                data['server_message'] = str(daily_log_list.emp.emp_name) + " (" + str(daily_log_list.emp.emp_id) + ")"
+                    daily_log_list.save()
+                    data['isExecuted'] = True
+                    # data['server_message'] = daily_log_list.emp.emp_id
+                    data['server_message'] = str(daily_log_list.emp.emp_name) + " (" + str(daily_log_list.emp.emp_id) + ")"
+
+                else:
+                    print("Time is not correnct")
+                    data['server_message'] = "Wrong datetime."
+
             except Exception as e:
                 print("Exception from commands_serializer:", e)
         

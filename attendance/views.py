@@ -210,6 +210,7 @@ def download(request):
                             tottalworktime += d
 
                         tottalworktimeinhrs = round(tottalworktime.total_seconds()/3600 , 2)
+                        overtimeinhrs = round(overtime.total_seconds()/3600 , 2)
                         worktime = tottalworktime - overtime
                                              
                         
@@ -226,7 +227,7 @@ def download(request):
                         if(present_count == 0 and abs_count == 0 and late_count == 0 and early_count == 0):
                             pass
                         else:
-                            writer.writerow([empList[i].emp_name , empList[i].emp_id,  present_count , late_count , abs_count, early_count, "Monthly" if empList[i].emp_salary_type == "M" else "Hourly", empList[i].emp_salary, empList[i].emp_overtime_per_hour, str(overtime) + " hrs", str(tottalworktimeinhrs)+ " hrs" , total_salary])
+                            writer.writerow([empList[i].emp_name , empList[i].emp_id,  present_count , late_count , abs_count, early_count, "Monthly" if empList[i].emp_salary_type == "M" else "Hourly", empList[i].emp_salary, empList[i].emp_overtime_per_hour, str(overtimeinhrs) + " hrs", str(tottalworktimeinhrs)+ " hrs" , total_salary])
 
 
                     except Exception as e:
@@ -245,15 +246,27 @@ def download(request):
             for i in range (len(data)):
                 overtime = "0 hrs"
                 duration = "0 hrs"
-                status = "Absent"
                 
                 try:
                     # print(datetime.datetime.combine(data[i].date, data[i].emp_out_time) - datetime.datetime.combine(data[i].date, data[i].emp_in_time))
-                    duration = str(datetime.datetime.combine(data[i].date, data[i].emp_out_time) - datetime.datetime.combine(data[i].date, data[i].emp_in_time)) + " hrs"
+                    duration = datetime.datetime.combine(data[i].date, data[i].emp_out_time) - datetime.datetime.combine(data[i].date, data[i].emp_in_time)
+                    duration = str(round(duration.total_seconds()/3600 , 2)) + " hrs"
                     
                     if(data[i].emp_out_time > settings.overtime_count_after):
-                        overtime = str(datetime.datetime.combine(data[i].date, data[i].emp_out_time) - datetime.datetime.combine(data[i].date, settings.endTime)) + " hrs"
+                        overtime = datetime.datetime.combine(data[i].date, data[i].emp_out_time) - datetime.datetime.combine(data[i].date, settings.endTime)
+                        overtime = str(round(overtime.total_seconds()/3600 , 2)) + " hrs"
+                        print(data[i].date)
+                        print(data[i].emp_out_time)
+                        print(data[i].date)
+                        print(settings.endTime)
+                        print(overtime)
 
+                except:
+                    duration = ""
+                    overtime = ""
+
+                try:
+                    status = "Absent"
                     if(data[i].emp_present):
                         status = "Present"
                         if(data[i].emp_in_time > settings.delayTime):
@@ -262,12 +275,9 @@ def download(request):
                             status = status + " & Left early"
                         elif (data[i].emp_out_time >= settings.endTime):
                             status = status + " & Signed out"
-
-
                 except:
-                    duration = ""
-                    overtime = ""
-
+                    pass
+                
                 writer.writerow([data[i].emp.emp_name, data[i].emp.emp_id,
                 data[i].date,
                 status,

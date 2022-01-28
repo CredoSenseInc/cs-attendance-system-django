@@ -53,13 +53,13 @@ def user_password_change(request):
             messages.success(request, 'Your password was successfully updated')
             return redirect('dashboard')
         else:
-            # error_message = str(form.errors)
-            print("ERRROR" , error_message)
+            error_message = str(form.errors)
+            # print("ERRROR" , error_message)
             error_message = error_message.replace("old_password" , "")
             error_message = error_message.replace("new_password2" , "")
             error_message = error_message.replace("new_password1" , "")
-            clean = re.compile('<.*?>')
-            text = re.sub(clean, '', error_message)
+            # clean = re.compile('<.*?>')
+            # text = re.sub(clean, '', error_message)
             # print(text.replace("." , "<br>"))
             messages.error(request, error_message)
             
