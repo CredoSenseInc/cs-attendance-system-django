@@ -61,9 +61,10 @@
                     <button class="input-submit button-sucess lgn-btn-size" type="submit"><span>Login</span></button>
                     <!-- <input type="submit" name="submit" class="input-submit" value="Login" disabled> -->
                 </div>
-                
+            </form>
+            <form name="login" class="form" action="{% url 'dashboard_view' %}">
                 <div class="input-control">
-                    <button class="input-submit button-sucess lgn-btn-size" onclick="window.location.href='{% url 'dashboard_view' %}'"><span>View attendance</span></button>
+                    <button class="input-submit button-sucess lgn-btn-size" type="submit"><span>View Attendance</span></button>
                 </div>
             </form>
         </section>
