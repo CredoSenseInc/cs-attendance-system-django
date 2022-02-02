@@ -1,3 +1,4 @@
+from operator import mod
 from django.db import models
 from employee.models import employee
 
@@ -9,3 +10,4 @@ class attendanceLog(models.Model):
     date = models.DateField(blank=False, null=True)
     emp_in_time = models.TimeField(blank=True, null=True)
     emp_out_time = models.TimeField(blank=True, null=True)
+    comment = models.CharField(max_length=255, null=False, blank=True, default="")

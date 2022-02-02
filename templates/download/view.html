@@ -30,6 +30,7 @@
                         <th>Date</th>
                         <th>In time</th>
                         <th>Out time</th>
+                        <th>Comment</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,6 +62,7 @@
                         <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.date|date:"Y-m-d"}}</a></td>
                         <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp_in_time|time:"g:i A"}}</a></td>
                         <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.emp_out_time|time:"g:i A"}}</a></td>
+                        <td><a href="#" data-bs-toggle="modal" data-bs-target="#edit-daily{{list.id}}">{{list.comment}}</a></td>
                     </tr>
                     {%endfor%}
                 </tbody>

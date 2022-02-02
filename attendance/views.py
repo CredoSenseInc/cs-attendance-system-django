@@ -52,6 +52,11 @@ def update_attendance(request):
             print(e)
 
         try:
+            log.comment = request.POST['comment']
+        except Exception as e:
+            print(e)
+
+        try:
             log.save()
             message_text = "Sucessfully updated the log."
             messages.success(request, message_text)
@@ -240,7 +245,7 @@ def download(request):
             writer.writerow([])
             writer.writerow(["Detailed log"])
             writer.writerow([])
-            writer.writerow(['Name' ,'ID', 'Date' , 'Status', 'In time' ,  'Out time', 'Overtime', 'Total workhour',])
+            writer.writerow(['Name' ,'ID', 'Date' , 'Status', 'In time' ,  'Out time', 'Overtime', 'Total workhour', 'Comment'])
             
 
             for i in range (len(data)):
@@ -285,7 +290,7 @@ def download(request):
                 data[i].emp_out_time,
                 str(overtime),
                 duration,
-                
+                data[i].comment,
                 ])
                    
             # else:
