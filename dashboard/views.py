@@ -6,6 +6,90 @@ from datetime import date
 import datetime
 # from rest_framework.authtoken.models import Token
 
+def dashboard_view(request):
+    # token = Token.objects.create(user=request.user)
+    todays_date = date.today()
+    log_list = attendanceLog.objects.filter(date__month=todays_date.month)
+    daily_log_list = attendanceLog.objects.filter(date=todays_date)
+    present_emp = daily_log_list.filter(emp_present = True)
+    abesent_emp = daily_log_list.filter(emp_present = False)
+    late_emp = daily_log_list.filter(date=todays_date, emp_present = True, emp_in_time__gte = settings_db.objects.last().delayTime)
+
+    total_emp = employee.objects.all().count()
+    settings = settings_db.objects.last()
+    if (settings is None):
+        settings = settings_db()
+        settings.save()
+        settings = settings_db.objects.last()
+
+    present_count = attendanceLog.objects.filter(date=todays_date, emp_present = True).count()
+    
+    late_count = attendanceLog.objects.filter(date=todays_date, emp_present = True, emp_in_time__gte = settings_db.objects.last().delayTime).count()
+    # print(settings_db.objects.last().delayTime)
+    absent_count = attendanceLog.objects.filter(date=todays_date, emp_present = False).count()
+    now = datetime.datetime.now()
+
+    present_graph = []
+    present_graph_name = []
+    late_graph = []
+    late_graph_name = []
+    absent_graph = []
+    absent_graph_name = []
+    not_signed_out_graph = []
+    not_signed_out_graph_name = []
+    all_emp = employee.objects.all()
+    for i in range (all_emp.count()):
+        present_graph_name.append(all_emp[i].emp_name)
+        present_graph.append(log_list.filter(emp = all_emp[i], emp_present = True).count())
+
+
+    for i in range (all_emp.count()):
+        late_graph_name.append(all_emp[i].emp_name)
+        late_graph.append(log_list.filter(emp = all_emp[i], emp_present = True, emp_in_time__gte = settings_db.objects.last().delayTime).count())
+
+
+    for i in range (all_emp.count()):
+        absent_graph_name.append(all_emp[i].emp_name)
+        absent_graph.append(log_list.filter(emp = all_emp[i], emp_present = False).count())
+
+
+    for i in range (all_emp.count()):
+        not_signed_out_graph_name.append(all_emp[i].emp_name)
+        not_signed_out_graph.append(log_list.filter(emp = all_emp[i], emp_present = True, emp_in_time__isnull=False, emp_out_time__isnull=True).count())
+
+
+    # current_time = now.strftime("%H:%M:%S")
+    # print(current_time , settings.endTime)
+    context = {
+        "log_list" : log_list,
+        "daily_log_list" : daily_log_list,
+        "current_month" : (todays_date).strftime("%B"),
+        "current_date" : (todays_date).strftime("%d-%b-%Y"),
+        "total_emp" : total_emp,
+        "present_count" : present_count,
+        "late_count" : late_count,
+        "absent_count" : absent_count,
+        "late_time" : settings.delayTime,
+        "end_time": settings.endTime,
+        "present_emp" : present_emp,
+        "abesent_emp" : abesent_emp,
+        "late_emp" : late_emp,
+        "present_graph" : present_graph,
+        "present_graph_name" : present_graph_name,
+        "late_graph" : late_graph,
+        "late_graph_name" : late_graph_name,
+        "absent_graph" : absent_graph,
+        "absent_graph_name" : absent_graph_name,
+        "not_signed_out_graph" : not_signed_out_graph,
+        "not_signed_out_graph_name" : not_signed_out_graph_name,
+
+        # "current_time" : current_time
+    }
+    create_daily_log()
+    return render(request, 'dashboard/dashboard_view.html', context)
+
+
+
 # Create your views here.
 @login_required(login_url='user/login/')
 def dashboard(request):
