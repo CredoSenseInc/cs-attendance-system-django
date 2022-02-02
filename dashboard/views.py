@@ -91,7 +91,7 @@ def dashboard_view(request):
 
 
 # Create your views here.
-@login_required(login_url='user/login/')
+@login_required(login_url='/user/login/')
 def dashboard(request):
     # token = Token.objects.create(user=request.user)
     todays_date = date.today()
@@ -137,7 +137,7 @@ def dashboard(request):
     create_daily_log()
     return render(request, 'dashboard/dashboard.html', context)
 
-# @login_required(login_url='user/login/')
+# @login_required(login_url='/user/login/')
 def create_daily_log():
     todays_date = date.today()
     print(todays_date)

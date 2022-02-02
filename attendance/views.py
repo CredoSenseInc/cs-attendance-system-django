@@ -15,7 +15,7 @@ os.environ['OPENBLAS_NUM_THREADS'] = '1'
 
 import pandas as pd
 # Create your views here.
-@login_required(login_url='user/login/')
+@login_required(login_url='/user/login/')
 def update_attendance(request):
     if request.method == "POST":
         print(request.POST)
@@ -73,7 +73,7 @@ def update_attendance(request):
     except:
         return redirect('dashboard')
 
-@login_required(login_url='user/login/')
+@login_required(login_url='/user/login/')
 def download(request):
     if(request.method == "POST"):
         response = HttpResponse('')

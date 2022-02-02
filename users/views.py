@@ -43,7 +43,7 @@ def user_logout(request):
     return redirect('/')
 
 # user password change
-@login_required(login_url='user/login/')
+@login_required(login_url='/user/login/')
 def user_password_change(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)

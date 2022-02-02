@@ -13,7 +13,7 @@ import datetime
 import calendar
 # Create your views here.
 
-@login_required(login_url='user/login/')
+@login_required(login_url='/user/login/')
 def employee_page(request):
     emp_list = employee.objects.all()
     device_list = deviceInfo.objects.all()
@@ -23,7 +23,7 @@ def employee_page(request):
     }
     return render(request, 'employee/employee.html', context)
 
-@login_required(login_url='user/login/')
+@login_required(login_url='/user/login/')
 def add_emp(request):
     print(request.method)
     if request.method == "POST":
@@ -63,7 +63,7 @@ def add_emp(request):
             messages.error(request, message_text)
     return redirect('employee')
 
-@login_required(login_url='user/login/')
+@login_required(login_url='/user/login/')
 def update_emp(request):
     print(request.method)
     if request.method == "POST":
@@ -196,7 +196,7 @@ def delete_fingerprint(fingerprints):
             cmd.message = "delete:"+ str(fingerprints[j])
             cmd.save()
 
-# @login_required(login_url='user/login/')
+# @login_required(login_url='/user/login/')
 def scan_fingerprint(fid, device, request):
     try:
         cmd = commands()
@@ -231,7 +231,7 @@ def scan_fingerprint(fid, device, request):
     # return redirect('employee')
 
 
-@login_required(login_url='user/login/')
+@login_required(login_url='/user/login/')
 def attendance_download(request):
     todays_date = date.today()
 
@@ -256,7 +256,7 @@ def attendance_download(request):
     }
     return render(request, 'download/download.html', context)
 
-@login_required(login_url='user/login/')
+@login_required(login_url='/user/login/')
 def attendance_download_search(request):
     if "term" in request.GET:
         qs = employee.objects.filter(Q(emp_name__icontains=request.GET.get("term")) | Q(emp_id__icontains=request.GET.get("term")))

@@ -8,7 +8,7 @@ import semantic_version
 from django.db.models import Q
 # Create your views here.
 
-@login_required(login_url='user/login/')
+@login_required(login_url='/user/login/')
 def settings(request):
     settings = settings_db.objects.last()
     device = deviceInfo.objects.all()
@@ -43,7 +43,7 @@ def settings(request):
     }
     return render(request, 'settings/settings.html', context)
 
-@login_required(login_url='user/login/')
+@login_required(login_url='/user/login/')
 def firmware_update(request):
     print(request.POST)
     if request.method == "POST":
@@ -82,7 +82,7 @@ def firmware_update(request):
 
     return redirect('settings')
 
-@login_required(login_url='user/login/')
+@login_required(login_url='/user/login/')
 def update(request):
     if request.method == "POST":
         settings = settings_db.objects.last()
