@@ -5,6 +5,8 @@ from attendance.models import attendanceLog
 from datetime import date
 from django.db.models import Q
 
+from employee.models import employee
+
 class commands_serializer(serializers.ModelSerializer):
     class Meta:
         model = commands
@@ -42,13 +44,12 @@ class commands_serializer(serializers.ModelSerializer):
         
         elif("info" in data['message']):
             try:
-                todays_date = date.today()
                 messange_from_esp = str(data['message']).split(":")
                 f_id = messange_from_esp[1]
                 
-                daily_log_list = attendanceLog.objects.get(Q(emp__emp_finger_id_1 = f_id) | Q(emp__emp_finger_id_2 = f_id) | Q(emp__emp_finger_id_3 = f_id) | Q(emp__emp_finger_id_4 = f_id), date=todays_date)
+                emp_info = employee.objects.get(Q(emp_finger_id_1 = f_id) | Q(emp_finger_id_2 = f_id) | Q(emp_finger_id_3 = f_id) | Q(emp_finger_id_4 = f_id))
                 data['isExecuted'] = True
-                text_to_send = str(daily_log_list.emp.emp_name) + " (" + str(daily_log_list.emp.emp_id) + ")" 
+                text_to_send = str(emp_info.emp_name) + " (" + str(emp_info.emp_id) + ")" 
                 data['server_message'] = text_to_send
             except Exception as e:
                 print("Exception from commands_serializer:", e)
