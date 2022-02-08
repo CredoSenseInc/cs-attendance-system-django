@@ -22,9 +22,13 @@ class commands_serializer(serializers.ModelSerializer):
                 # print(data['scan_time'].time())
                 if data['scan_time'].date() == todays_date:
                     if daily_log_list.emp_in_time is None:
-                        daily_log_list.emp_present = True
-                        if(daily_log_list.date == data['scan_time'].date()):
-                            daily_log_list.emp_in_time = data['scan_time'].time()
+                        # FOR CREDOSENSE ONLY REMOVE FOR SAUDA FASHION
+                        if data['scan_time'].time().hour >= 13:
+                            pass
+                        else:
+                            daily_log_list.emp_present = True
+                            if(daily_log_list.date == data['scan_time'].date()):
+                                daily_log_list.emp_in_time = data['scan_time'].time()
                     
                     elif daily_log_list.emp_in_time is not None:
                         if(daily_log_list.date == data['scan_time'].date()):
