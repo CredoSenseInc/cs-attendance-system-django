@@ -85,14 +85,7 @@ def download(request):
             to_date = datetime.datetime(int(to_date[0]), int(to_date[1]), 1).date()
             
             to_date = to_date.replace(day=calendar.monthrange(to_date.year, to_date.month)[1])
-            print("----")
-            print("----")
-            print("----")
-            print("FROM" , from_date)
-            print("TO" ,to_date)
-            print("----")
-            print("----")
-            print("----")
+
             # test_date = datetime.date(int(to_date[0]),int(to_date[1]),4)
               
             
@@ -199,20 +192,26 @@ def download(request):
                         overtime_data = data.filter(emp = empList[i], emp_present = True, date__gte=month_list[q].date(), date__lte = last_date.date(), emp_out_time__gte = settings.overtime_count_after)
                         
                         for j in range(len(overtime_data)):
-                            time_diff = datetime.datetime.combine(overtime_data[j].date, overtime_data[j].emp_out_time) - datetime.datetime.combine(overtime_data[j].date, settings.endTime)
-                            (h, m, s) = str(time_diff).split(':')
-                            d = datetime.timedelta(hours=int(h), minutes=int(m), seconds=int(s))
-                            overtime += d
+                            try:
+                                time_diff = datetime.datetime.combine(overtime_data[j].date, overtime_data[j].emp_out_time) - datetime.datetime.combine(overtime_data[j].date, settings.endTime)
+                                (h, m, s) = str(time_diff).split(':')
+                                d = datetime.timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+                                overtime += d
+                            except Exception as e:
+                                print(e)
 
                         work_data = data.filter(emp = empList[i], emp_present = True, date__gte=month_list[q].date(), date__lte = last_date.date()).exclude(emp_in_time=None).exclude(emp_out_time=None)
                         
                         for k in range(len(work_data)):
-                            duration = str(datetime.datetime.combine(work_data[k].date, work_data[k].emp_out_time) - datetime.datetime.combine(work_data[k].date,work_data[k].emp_in_time))
-                            print("duration",duration)
-                            print("duration",type(duration))
-                            (h, m, s) = str(duration).split(':')
-                            d = datetime.timedelta(hours=int(h), minutes=int(m), seconds=int(s))
-                            tottalworktime += d
+                            try:
+                                duration = str(datetime.datetime.combine(work_data[k].date, work_data[k].emp_out_time) - datetime.datetime.combine(work_data[k].date,work_data[k].emp_in_time))
+                                print("duration",duration)
+                                print("duration",type(duration))
+                                (h, m, s) = str(duration).split(':')
+                                d = datetime.timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+                                tottalworktime += d
+                            except Exception as e:
+                                print(e)
 
                         tottalworktimeinhrs = round(tottalworktime.total_seconds()/3600 , 2)
                         overtimeinhrs = round(overtime.total_seconds()/3600 , 2)
@@ -237,10 +236,6 @@ def download(request):
 
                     except Exception as e:
                         print(e)
-                        pass
-
-
-
 
             writer.writerow([])
             writer.writerow(["Detailed log"])
