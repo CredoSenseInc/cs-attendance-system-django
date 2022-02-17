@@ -241,7 +241,7 @@ def attendance_download(request):
     print(lastMonth)
     print(todayMonth)
     emp = employee.objects.values_list('emp_name', flat=True)
-
+    emp_list = employee.objects.all()
     log_list = attendanceLog.objects.filter(date__lte=todayMonth, date__gte=lastMonth)
     settings = settings_db.objects.last()
     
@@ -253,6 +253,7 @@ def attendance_download(request):
         "last_month" : (lastMonth).strftime("%B"),
         "late_time" : settings.delayTime,
         "end_time": settings.endTime,
+        "emp_list" : emp_list
     }
     return render(request, 'download/download.html', context)
 

@@ -243,3 +243,25 @@ body {
 h5.card-header{
   color: #fff;
 }
+.select2-container .select2-selection--single{
+  height: 43px!important;
+  max-height: 43px!important;
+  width: 226px!important;
+  max-width: 226px!important;
+  border: 1px solid #CED4DA!important;
+
+}
+
+span.select2-selection.select2-selection--single{
+  padding: 0px!important;
+  padding-top: 8px!important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow{
+  top: 9px!important;
+  right: 95px!important;
+}
+
+.select2-container--open .select2-dropdown--below{
+  max-width: 226px;
+}

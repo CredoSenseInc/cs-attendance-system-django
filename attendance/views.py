@@ -103,8 +103,16 @@ def download(request):
             # to_date = datetime.date(int(to_date[0]),int(to_date[1]),res.day)
             # print(to_date)
             
+            # try:
+            #     if (request.POST['allEmpCheck'] == "1"):
+            #         allEmpDownload = True
+            #     else:
+            #         allEmpDownload = False
+            # except:
+            #     allEmpDownload = False
+
             try:
-                if (request.POST['allEmpCheck'] == "1"):
+                if (request.POST['empname'] == "all"):
                     allEmpDownload = True
                 else:
                     allEmpDownload = False
