@@ -185,7 +185,8 @@ def download(request):
 
                 writer.writerow([])
                 writer.writerow([month_list[q].strftime("%Y-%m")])
-                writer.writerow(['Name' ,'ID', 'Present Count' , 'Late Count' , 'Absent Count', 'Early leave', 'Salary type', 'Salary', 'Overtime/hr', 'Total overtime', 'Total workhour', 'Total Salary'])
+                writer.writerow(['Total working days: ' + str(data.filter(date__gte=month_list[q].date(), date__lte = last_date.date()).order_by('date').values_list('date', flat=True).distinct().count())])
+                writer.writerow(['Name' ,'ID', 'Present Count' , 'Late Count' , 'Absent Count', 'Early leave', 'Not signed out' , 'Salary type', 'Salary', 'Overtime/hr', 'Total overtime', 'Total workhour', 'Total Salary'])
                 for i in range(len(empList)):
                     try:
                         print("Current and last")
@@ -194,6 +195,8 @@ def download(request):
                         abs_count = data.filter(emp = empList[i], emp_present = False, date__gte=month_list[q].date(), date__lte = last_date.date()).count()
                         late_count = data.filter(emp = empList[i], emp_present = True, date__gte=month_list[q].date(), date__lte = last_date.date(), emp_in_time__gte=settings.delayTime).count()
                         early_count = data.filter(emp = empList[i], emp_present = True, date__gte=month_list[q].date(), date__lte = last_date.date(), emp_out_time__lte=settings.endTime).count()
+                        not_signed_out = data.filter(emp = empList[i], emp_present = True, date__gte=month_list[q].date(), date__lte = last_date.date(), emp_in_time__isnull=False, emp_out_time__isnull=True).count()
+
                         overtime = datetime.timedelta()
                         tottalworktime = datetime.timedelta()
                         total_salary = float(empList[i].emp_salary)
@@ -239,7 +242,7 @@ def download(request):
                         if(present_count == 0 and abs_count == 0 and late_count == 0 and early_count == 0):
                             pass
                         else:
-                            writer.writerow([empList[i].emp_name , empList[i].emp_id,  present_count , late_count , abs_count, early_count, "Monthly" if empList[i].emp_salary_type == "M" else "Hourly", empList[i].emp_salary, empList[i].emp_overtime_per_hour, str(overtimeinhrs) + " hrs", str(tottalworktimeinhrs)+ " hrs" , total_salary])
+                            writer.writerow([empList[i].emp_name , empList[i].emp_id,  present_count , late_count , abs_count, early_count, not_signed_out , "Monthly" if empList[i].emp_salary_type == "M" else "Hourly", empList[i].emp_salary, empList[i].emp_overtime_per_hour, str(overtimeinhrs) + " hrs", str(tottalworktimeinhrs)+ " hrs" , total_salary])
 
 
                     except Exception as e:
