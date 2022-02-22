@@ -263,7 +263,7 @@ span.select2-selection.select2-selection--single{
 }
 
 .select2-container--open .select2-dropdown--below{
-  min-width: 226px;
+ min-width: 226px; /*  #Test */
   max-width: 226px;
 }
 
