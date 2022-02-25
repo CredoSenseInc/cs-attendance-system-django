@@ -69,6 +69,13 @@ class commands_serializer(serializers.ModelSerializer):
             except Exception as e:
                 print("Exception from commands_serializer:", e)
 
+        elif("delete" in data['message']):
+            try:
+                data['isExecuted'] = False
+                data['server_message'] = "Data Received"
+            except Exception as e:
+                print("Exception from commands_serializer:", e)
+
         else:
             data['isExecuted'] = True
             data['server_message'] = "Data Received"
