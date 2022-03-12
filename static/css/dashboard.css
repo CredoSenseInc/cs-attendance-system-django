@@ -270,3 +270,7 @@ span.select2-selection.select2-selection--single{
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
   background-color: #009145!important;
 }
+
+.select2-selection__arrow{
+  display: none;
+}

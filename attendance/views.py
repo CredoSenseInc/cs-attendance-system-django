@@ -178,6 +178,25 @@ def download(request):
             month_list = pd.date_range(start, end, freq='MS').to_pydatetime().tolist()
             print("Month List" , month_list) 
             # for thiselem,nextelem in zip(month_list, month_list[1 : ] + month_list[ : 1]):
+
+            additonal_off_days = settings.offDay.split(",")
+            additional_work_days = settings.workDay.split(",")
+
+            for i in range(len(additional_work_days)):
+                try:
+                    additional_work_days[i] = datetime.datetime.strptime(additional_work_days[i], '%m/%d/%Y')
+                except:
+                    pass
+
+
+            for i in range(len(additonal_off_days)):
+                additonal_off_days[i] = datetime.datetime.strptime(additonal_off_days[i], '%m/%d/%Y')
+                try:
+                    if additonal_off_days[i] in additional_work_days:
+                        additonal_off_days.pop(i)
+                except:
+                    pass
+
             for q in range(len(month_list)):
                 last_date = calendar.monthrange(month_list[q].year , month_list[q].month)
                 last_date = month_list[q].replace(day = last_date[1])
@@ -185,17 +204,18 @@ def download(request):
 
                 writer.writerow([])
                 writer.writerow([month_list[q].strftime("%Y-%m")])
-                writer.writerow(['Total working days: ' + str(data.filter(date__gte=month_list[q].date(), date__lte = last_date.date()).order_by('date').values_list('date', flat=True).distinct().count())])
+                writer.writerow(['Total working days: ' + str(data.filter(date__gte=month_list[q].date(), date__lte = last_date.date()).order_by('date').values_list('date', flat=True).distinct().exclude(date__in = additonal_off_days).count())])
                 writer.writerow(['Name' ,'ID', 'Present Count' , 'Late Count' , 'Absent Count', 'Early leave', 'Not signed out' , 'Salary type', 'Salary', 'Overtime/hr', 'Total overtime', 'Total workhour', 'Total Salary'])
+
                 for i in range(len(empList)):
                     try:
                         print("Current and last")
                         print(month_list[q],last_date)
-                        present_count = data.filter(emp = empList[i], emp_present = True, date__gte=month_list[q].date(), date__lte = last_date.date()).count()
-                        abs_count = data.filter(emp = empList[i], emp_present = False, date__gte=month_list[q].date(), date__lte = last_date.date()).count()
-                        late_count = data.filter(emp = empList[i], emp_present = True, date__gte=month_list[q].date(), date__lte = last_date.date(), emp_in_time__gte=settings.delayTime).count()
-                        early_count = data.filter(emp = empList[i], emp_present = True, date__gte=month_list[q].date(), date__lte = last_date.date(), emp_out_time__lte=settings.endTime).count()
-                        not_signed_out = data.filter(emp = empList[i], emp_present = True, date__gte=month_list[q].date(), date__lte = last_date.date(), emp_in_time__isnull=False, emp_out_time__isnull=True).count()
+                        present_count = data.filter(emp = empList[i], emp_present = True, date__gte=month_list[q].date(), date__lte = last_date.date()).exclude(date__in = additonal_off_days).count()
+                        abs_count = data.filter(emp = empList[i], emp_present = False, date__gte=month_list[q].date(), date__lte = last_date.date()).exclude(date__in = additonal_off_days).count()
+                        late_count = data.filter(emp = empList[i], emp_present = True, date__gte=month_list[q].date(), date__lte = last_date.date(), emp_in_time__gte=settings.delayTime).exclude(date__in = additonal_off_days).count()
+                        early_count = data.filter(emp = empList[i], emp_present = True, date__gte=month_list[q].date(), date__lte = last_date.date(), emp_out_time__lte=settings.endTime).exclude(date__in = additonal_off_days).count()
+                        not_signed_out = data.filter(emp = empList[i], emp_present = True, date__gte=month_list[q].date(), date__lte = last_date.date(), emp_in_time__isnull=False, emp_out_time__isnull=True).exclude(date__in = additonal_off_days).count()
 
                         overtime = datetime.timedelta()
                         tottalworktime = datetime.timedelta()
@@ -251,7 +271,7 @@ def download(request):
             writer.writerow([])
             writer.writerow(["Detailed log"])
             writer.writerow([])
-            writer.writerow(['Name' ,'ID', 'Date' , 'Status', 'In time' ,  'Out time', 'Overtime', 'Total workhour', 'Comment'])
+            writer.writerow(['Name' ,'ID', 'Date' , 'Status', 'In time' ,  'Out time', 'Overtime', 'Total workhour', 'Comment', 'Note'])
             
 
             for i in range (len(data)):
@@ -288,7 +308,22 @@ def download(request):
                             status = status + " & Signed out"
                 except:
                     pass
-                
+
+                note = ""
+                try:
+                    if  datetime.datetime(data[i].date.year, data[i].date.month, data[i].date.day)  in additonal_off_days:
+                        print("OFF DAY FOUND")
+                        note = "Off day"
+                except:
+                    pass
+
+                try:
+                    if  datetime.datetime(data[i].date.year, data[i].date.month, data[i].date.day)  in additional_work_days:
+                        print("Add. Work DAY FOUND")
+                        note = "Additional Working Day"
+                except:
+                    pass
+
                 writer.writerow([data[i].emp.emp_name, data[i].emp.emp_id,
                 data[i].date,
                 status,
@@ -297,6 +332,7 @@ def download(request):
                 str(overtime),
                 duration,
                 data[i].comment,
+                note,
                 ])
                    
             # else:

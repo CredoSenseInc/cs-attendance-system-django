@@ -22,6 +22,7 @@
     <div class="card mt-3 shadow-lg">
         <h5 class="card-header">Daily summary ({{current_date}})</h5>
         <div class="card-body">
+            {% if show_table %}
             <div class="row">
                 <div class="col-12 col-sm-6 col-md-3 py-2">
                     <a href="{% url 'employee' %}"><div class="card-counter primary" >
@@ -80,7 +81,7 @@
                 </div>
                 
             </div>
-
+            
             <div style="overflow-x:auto;" class="card mt-3">
                 <!-- <h5 class="card-header">Attendance log (December)</h5> -->
                 <div class="card-body">
@@ -129,6 +130,12 @@
                     </table>
                 </div>
               </div>
+
+            {% else %}
+
+            <b>Today is off day. If its a working day <a href="{% url 'settings' %}" style="color: #009145;">add here.</a></b> 
+
+            {% endif %}
         </div>
     </div>
     
@@ -136,7 +143,7 @@
     <div style="overflow-x:auto;" class="card mt-3 shadow-lg">
         <h5 class="card-header">Attendance log ({{current_month}})</h5>
         <div class="card-body">
-            <!-- <div class="container">
+            <!-- <div class="container"> -->
                 <div class="row">
                     <div class="col-md-3 col-sm-4">
                         <canvas id="present" width="400" height="400"></canvas>
@@ -284,7 +291,7 @@
                         }
                     }
                 });
-            </script> -->
+            </script>
 
 
             

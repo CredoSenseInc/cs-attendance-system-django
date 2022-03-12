@@ -23,6 +23,7 @@
     <div class="card mt-3 shadow-lg">
         <h5 class="card-header">Daily summary ({{current_date}})</h5>
         <div class="card-body">
+            {% if show_table %}
             <div class="row">
                 <div class="col-12 col-sm-6 col-md-3 py-2">
                     <a href="{% url 'employee' %}"><div class="card-counter primary" >
@@ -130,6 +131,11 @@
                     </table>
                 </div>
               </div>
+            {% else %}
+
+            <b>Today is off day. If its a working day <a href="{% url 'settings' %}" style="color: #009145;">add here.</a></b> 
+
+            {% endif %}
         </div>
     </div>
     
