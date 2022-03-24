@@ -6,6 +6,7 @@ from employee.models import *
 from settings.models import *
 from attendance.models import *
 from datetime import date
+from django.template.loader import render_to_string
 
 def my_scheduled_job():
     print("Daily Log Create Task")
@@ -54,13 +55,13 @@ def send_summary_mail():
                     count += 1
             
                 message += "<br>If there is a mistake please contact HR for Support.<br><br>Thanks,<br>CredoSense Bot."
-
+                msg_html = render_to_string('email_summary.html', {'message': message, 'todays_date' : todays_date})
                 if count > 0 :
                     mail.send(
                     [str(i.emp.email)], # List of email addresses also accepted
                     'CredoSense Bot <credobot@cloud.credosense.com>',
                     subject= f"Your attendance summary for {todays_date} | CredoSense",
-                    html_message = message
+                    html_message = msg_html
                     # html_message='Hi <strong>there</strong>!',
                 )
             except Exception as e:
@@ -78,12 +79,13 @@ def send_late_email():
                 print(i.emp.email)
                 print(i.emp.emp_name)
                 emp_name = i.emp.emp_name
+                message = f"Hi {emp_name},<br><br>You haven't scanned your fingerprint yet. Please sign in or else you will be absent for the day. If you are on leave then please ignore this email. If there is a mistake please contact HR for Support.<br><br>With Regards,<br>CredoSense Bot."
+                msg_html = render_to_string('email_notification.html', {'message': message})
                 mail.send(
                     [str(i.emp.email)], # List of email addresses also accepted
                     'CredoSense Bot <credobot@cloud.credosense.com>',
-                    subject= "Please Punch In! - CredoSense",
-                    html_message= f"Hi {emp_name},<br><br>You haven't scanned your fingerprint yet. Please sign in or else you will be absent for the day. If you are on leave then please ignore this email. If there is a mistake please contact IT Support.<br><br>With Regards,<br>CredoSense Bot.",
-                    # html_message='Hi <strong>there</strong>!',
+                    subject= "Please Punch In! | CredoSense",
+                    html_message= msg_html,
                 )
             except:
                 pass
