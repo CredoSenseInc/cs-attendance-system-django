@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 from django.contrib.messages import constants as messages
 from django.contrib.messages import constants as message_constants
-
+from decouple import config
 from pathlib import Path
 import os
 import pymysql
@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'crispy_forms',
+    'post_office',
 ]
 
 REST_FRAMEWORK = {
@@ -105,6 +106,14 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+EMAIL_BACKEND = 'post_office.EmailBackend'
+
+EMAIL_HOST = config('EMAIL_HOST', default='localhost')
+EMAIL_PORT = config('EMAIL_PORT', default=25, cast=int)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=True, cast=bool)
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -177,11 +186,11 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Dacca'
 
-USE_I18N = True
+# USE_I18N = True
 
-USE_L10N = True
+# USE_L10N = True
 
-USE_TZ = True
+# USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -223,5 +232,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 # https://pypi.org/project/django-crontab/
 # Works only on Linux
 CRONJOBS = [
-    ('1	13,20 * * *', 'cs_attendance_system.cronjob.my_scheduled_job')
+    ('1 14,20 * * *', 'cs_attendance_system.cronjob.my_scheduled_job'), # 12 AM and 6 AM
+    ('1 10,23 * * *', 'cs_attendance_system.cronjob.send_mails') # 8 PM and 9 AM
 ]

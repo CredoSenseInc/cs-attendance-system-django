@@ -1,3 +1,4 @@
+from telnetlib import STATUS
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from attendance.models import *
@@ -117,8 +118,6 @@ def dashboard_view(request):
     
     return render(request, 'dashboard/dashboard_view.html', context)
 
-
-
 # Create your views here.
 @login_required(login_url='/user/login/')
 def dashboard(request):
@@ -167,6 +166,8 @@ def dashboard(request):
     print("SHOW TABLE " , show_table)
     return render(request, 'dashboard/dashboard.html', context)
 
+
+
 # @login_required(login_url='/user/login/')
 def create_daily_log():
     print("Creating daily log")
@@ -174,7 +175,7 @@ def create_daily_log():
     print(todays_date)
     print(datetime.datetime.now().strftime("%H:%M:%S"))
     all_emp = employee.objects.all()
-    settings = settings_db.objects.last()
+    settings = settings_db.objects.last()   
     offDay = str(settings.offDay).split(",")
     workDay = str(settings.workDay).split(",")
     print(workDay)

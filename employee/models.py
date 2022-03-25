@@ -36,6 +36,7 @@ class employee(models.Model):
     emp_name = models.CharField(max_length=255, blank=False, null=False)
     emp_contact_number = models.CharField(max_length=255, blank=False, null=False)
     emp_id = models.CharField(max_length=15, blank=False, null=False, unique = True)
+    email = models.EmailField(max_length=254, null= True, blank=True)
 
     emp_finger_id_1 = models.CharField(max_length=255, blank=False, null=False, unique = True, default=generate_unique_fid)
     emp_finger_id_2 = models.CharField(max_length=255, blank=True, null=False,  default="")

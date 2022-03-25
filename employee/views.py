@@ -41,6 +41,7 @@ def add_emp(request):
             emp.emp_salary_type = request.POST['salaryType']
             emp.emp_salary= request.POST['salary']
             emp.emp_overtime_per_hour = request.POST['oversalary']
+            emp.email = request.POST['email']
             
             emp.save()
 
@@ -176,6 +177,12 @@ def update_emp(request):
                 emp.emp_salary_type = request.POST['salaryType']
                 emp.emp_salary= request.POST['salary']
                 emp.emp_overtime_per_hour = request.POST['oversalary']
+
+                try:
+                    emp.email = request.POST['email']
+                except:
+                    pass
+
                 emp.save()
                 message_text = "Sucessfully updated employee information."
                 messages.success(request, message_text)
@@ -237,7 +244,7 @@ def attendance_download(request):
 
     lastMonth = (date.today().replace(day=1) - datetime.timedelta(days =1)).replace(day = 1)
     todayMonth = date.today().replace(day=calendar.monthrange(todays_date.year, todays_date.month)[1])
-
+    
     print(lastMonth)
     print(todayMonth)
     emp = employee.objects.values_list('emp_name', flat=True)
