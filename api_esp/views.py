@@ -19,14 +19,15 @@ import time
 
 class showCommands(APIView): 
     permission_classes = (IsAuthenticated,)
-    def get(self, request):
+    def get(self, request, device_id):
+        print(device_id)
         five_minutes_ago = datetime.datetime.now()  + datetime.timedelta(minutes=-5)
         print(five_minutes_ago)
-        commandsToSend = commands.objects.filter(Q(isExecuted = False, timestamp__gte=five_minutes_ago) | Q(isExecuted = False, message__contains = "delete") | Q(isExecuted = False, message__contains = "update"))
+        commandsToSend = commands.objects.filter(Q(isExecuted = False, timestamp__gte=five_minutes_ago, device_id = device_id) | Q(isExecuted = False, message__contains = "delete", device_id = device_id) | Q(isExecuted = False, message__contains = "update", device_id = device_id))
         serialize = commands_serializer(commandsToSend, many = True)
         return Response(serialize.data)
 
-    def post(self, request):
+    def post(self, request, device_id):
         serializer = commands_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save()

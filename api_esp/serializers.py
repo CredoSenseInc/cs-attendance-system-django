@@ -15,8 +15,8 @@ class commands_serializer(serializers.ModelSerializer):
         if("attendance" in data['message']):
             try:
                 todays_date = date.today()
-                messange_from_esp = str(data['message']).split(":")
-                f_id = messange_from_esp[1]
+                message_from_esp = str(data['message']).split(":")
+                f_id = message_from_esp[1]
                 
                 daily_log_list = attendanceLog.objects.get(Q(emp__emp_finger_id_1 = f_id) | Q(emp__emp_finger_id_2 = f_id) | Q(emp__emp_finger_id_3 = f_id) | Q(emp__emp_finger_id_4 = f_id), date=todays_date)
                 # print(data['scan_time'].time())
@@ -48,8 +48,8 @@ class commands_serializer(serializers.ModelSerializer):
         
         elif("info" in data['message']):
             try:
-                messange_from_esp = str(data['message']).split(":")
-                f_id = messange_from_esp[1]
+                message_from_esp = str(data['message']).split(":")
+                f_id = message_from_esp[1]
                 
                 emp_info = employee.objects.get(Q(emp_finger_id_1 = f_id) | Q(emp_finger_id_2 = f_id) | Q(emp_finger_id_3 = f_id) | Q(emp_finger_id_4 = f_id))
                 data['isExecuted'] = True
