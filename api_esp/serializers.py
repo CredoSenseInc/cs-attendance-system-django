@@ -40,12 +40,19 @@ class commands_serializer(serializers.ModelSerializer):
                     data['server_message'] = str(daily_log_list.emp.emp_name) + " (" + str(daily_log_list.emp.emp_id) + ")"
 
                 else:
-                    print("Time is not correnct")
                     data['server_message'] = "Wrong datetime."
 
             except Exception as e:
                 print("Exception from commands_serializer:", e)
-        
+
+        elif("db_all" in data['message']):
+            try:
+                data['isExecuted'] = True
+                emp_info = employee.objects.all()
+                data['server_message'] = "Sending all"
+            except Exception as e:
+                print("Exception from commands_serializer:", e)
+
         elif("info" in data['message']):
             try:
                 message_from_esp = str(data['message']).split(":")
@@ -53,11 +60,10 @@ class commands_serializer(serializers.ModelSerializer):
                 
                 emp_info = employee.objects.get(Q(emp_finger_id_1 = f_id) | Q(emp_finger_id_2 = f_id) | Q(emp_finger_id_3 = f_id) | Q(emp_finger_id_4 = f_id))
                 data['isExecuted'] = True
-                text_to_send = str(emp_info.emp_name) + " (" + str(emp_info.emp_id) + ")" 
+                text_to_send = str(emp_info.emp_id)
                 data['server_message'] = text_to_send
             except Exception as e:
                 print("Exception from commands_serializer:", e)
-
 
         elif("ver" in data['message']):
             try:

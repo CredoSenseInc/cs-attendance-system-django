@@ -28,10 +28,34 @@ class showCommands(APIView):
         return Response(serialize.data)
 
     def post(self, request, device_id):
-        serializer = commands_serializer(data=request.data)
+        serializer = commands_serializer(data=request.data, many = True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data["server_message"], status=status.HTTP_201_CREATED)
+            return_message = []
+            for i in serializer.data:
+                if i['message'] == "db_all":
+                    emp_info = employee.objects.all()
+                    for emp in emp_info:
+                        if emp.emp_finger_id_1 != "":
+                            return_message.append({"name": emp.emp_name+ " (" + str(emp.emp_id) + ")", "finger_id" : emp.emp_finger_id_1})
+                        if emp.emp_finger_id_2 != "":
+                            return_message.append({"name": emp.emp_name+ " (" + str(emp.emp_id) + ")", "finger_id" : emp.emp_finger_id_2})
+                        if emp.emp_finger_id_3 != "":
+                            return_message.append({"name": emp.emp_name+ " (" + str(emp.emp_id) + ")", "finger_id" : emp.emp_finger_id_3})
+                        if emp.emp_finger_id_4 != "":
+                            return_message.append({"name": emp.emp_name+ " (" + str(emp.emp_id) + ")", "finger_id" : emp.emp_finger_id_4})
+
+                if "info" in i['message']:
+                    try:
+                        emp_info = employee.objects.get(emp_id = i["server_message"])
+                        return_message.append({"name": emp_info.emp_name + " (" + str(emp_info.emp_id) + ")", "finger_id" : str(i['message']).split(":")[1] })
+                    except:
+                        return_message.append({"name": "Not Found", "finger_id" : "Not Founds"})
+
+                else:
+                    return_message.append({"message": i['server_message']})
+            return Response(return_message, status=status.HTTP_201_CREATED)
+            
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class commandsUpdate(APIView):
