@@ -1,3 +1,4 @@
+from operator import mod
 from typing_extensions import Required
 from django.db import models
 import random
@@ -42,6 +43,7 @@ class employee(models.Model):
     emp_finger_id_2 = models.CharField(max_length=255, blank=True, null=False,  default="")
     emp_finger_id_3 = models.CharField(max_length=255, blank=True, null=False, default="")
     emp_finger_id_4 = models.CharField(max_length=255, blank=True, null=False,  default="")
+    rfid_tag_number = models.CharField(max_length=255, blank=True, null=False,  default="")
 
     emp_gender = models.CharField(max_length=255, blank=False, null=False, choices=gender)
     emp_designation = models.CharField(max_length=255, blank=False, null=False, default="")

@@ -183,6 +183,11 @@ def update_emp(request):
                 except:
                     pass
 
+                try:
+                    emp.rfid_tag_number = request.POST['rfid']
+                except:
+                    pass
+
                 emp.save()
                 message_text = "Sucessfully updated employee information."
                 messages.success(request, message_text)

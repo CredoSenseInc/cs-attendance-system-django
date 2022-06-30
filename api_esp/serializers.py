@@ -18,7 +18,7 @@ class commands_serializer(serializers.ModelSerializer):
                 message_from_esp = str(data['message']).split(":")
                 f_id = message_from_esp[1]
                 
-                daily_log_list = attendanceLog.objects.get(Q(emp__emp_finger_id_1 = f_id) | Q(emp__emp_finger_id_2 = f_id) | Q(emp__emp_finger_id_3 = f_id) | Q(emp__emp_finger_id_4 = f_id), date=todays_date)
+                daily_log_list = attendanceLog.objects.get(Q(emp__emp_finger_id_1 = f_id) | Q(emp__emp_finger_id_2 = f_id) | Q(emp__emp_finger_id_3 = f_id) | Q(emp__emp_finger_id_4 = f_id) | Q(emp__rfid_tag_number = f_id), date=todays_date)
                 # print(data['scan_time'].time())
                 if data['scan_time'].date() == todays_date:
                     if daily_log_list.emp_in_time is None:
