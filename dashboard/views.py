@@ -7,25 +7,26 @@ from datetime import date
 import datetime
 # from rest_framework.authtoken.models import Token
 
+
+# View the dashboard view with graph
 def dashboard_view(request):
     # token = Token.objects.create(user=request.user)
-    todays_date = date.today()
-    log_list = attendanceLog.objects.filter(date__month=todays_date.month)
-    daily_log_list = attendanceLog.objects.filter(date=todays_date)
-    present_emp = daily_log_list.filter(emp_present = True)
-    abesent_emp = daily_log_list.filter(emp_present = False)
-    late_emp = daily_log_list.filter(date=todays_date, emp_present = True, emp_in_time__gte = settings_db.objects.last().delayTime)
+    todays_date = date.today() # Current date
+    log_list = attendanceLog.objects.filter(date__month=todays_date.month) # monthly log list
+    daily_log_list = attendanceLog.objects.filter(date=todays_date) # Current day log list
+    present_emp = daily_log_list.filter(emp_present = True) # Present emp list
+    absent_emp = daily_log_list.filter(emp_present = False) # absent emp list
+    late_emp = daily_log_list.filter(date=todays_date, emp_present = True, emp_in_time__gte = settings_db.objects.last().delayTime) # late emp list
 
-    
-
-    total_emp = employee.objects.all().count()
-    settings = settings_db.objects.last()
+    total_emp = employee.objects.all().count() # Total emp
+    settings = settings_db.objects.last() # settings if not present create one
     if (settings is None):
         settings = settings_db()
         settings.save()
         settings = settings_db.objects.last()
-
-    additonal_off_days = settings.offDay.split(",")
+    
+    # Off and additional work day list and converting them to datetime
+    additional_off_days = settings.offDay.split(",")
     additional_work_days = settings.workDay.split(",")
 
     for i in range(len(additional_work_days)):
@@ -35,20 +36,15 @@ def dashboard_view(request):
             pass
 
 
-    for i in range(len(additonal_off_days)):
-        additonal_off_days[i] = datetime.datetime.strptime(additonal_off_days[i], '%m/%d/%Y')
+    for i in range(len(additional_off_days)):
+        additional_off_days[i] = datetime.datetime.strptime(additional_off_days[i], '%m/%d/%Y')
         try:
-            if additonal_off_days[i] in additional_work_days:
-                additonal_off_days.pop(i)
+            if additional_off_days[i] in additional_work_days:
+                additional_off_days.pop(i)
         except:
             pass
 
-    
-
-
-    print("------------")
-    print("Off days11" , additonal_off_days)
-    print("------------")
+    # Present, late, absent counts
     present_count = attendanceLog.objects.filter(date=todays_date, emp_present = True).count()
     
     late_count = attendanceLog.objects.filter(date=todays_date, emp_present = True, emp_in_time__gte = settings_db.objects.last().delayTime).count()
@@ -56,6 +52,7 @@ def dashboard_view(request):
     absent_count = attendanceLog.objects.filter(date=todays_date, emp_present = False).count()
     now = datetime.datetime.now()
 
+    # Graph values for views
     present_graph = []
     present_graph_name = []
     late_graph = []
@@ -66,26 +63,27 @@ def dashboard_view(request):
     not_signed_out_graph_name = []
     all_emp = employee.objects.all()
 
+    # Looping through all the criteria to find everyone's count
     for i in range (all_emp.count()):
         present_graph_name.append(all_emp[i].emp_name)
-        present_graph.append(log_list.filter(emp = all_emp[i], emp_present = True).exclude(date__in = additonal_off_days).count())
+        present_graph.append(log_list.filter(emp = all_emp[i], emp_present = True).exclude(date__in = additional_off_days).count())
 
 
     for i in range (all_emp.count()):
         late_graph_name.append(all_emp[i].emp_name)
-        late_graph.append(log_list.filter(emp = all_emp[i], emp_present = True, emp_in_time__gte = settings_db.objects.last().delayTime).exclude(date__in = additonal_off_days).count())
+        late_graph.append(log_list.filter(emp = all_emp[i], emp_present = True, emp_in_time__gte = settings_db.objects.last().delayTime).exclude(date__in = additional_off_days).count())
 
 
     for i in range (all_emp.count()):
         absent_graph_name.append(all_emp[i].emp_name)
-        absent_graph.append(log_list.filter(emp = all_emp[i], emp_present = False).exclude(date__in = additonal_off_days).count())
+        absent_graph.append(log_list.filter(emp = all_emp[i], emp_present = False).exclude(date__in = additional_off_days).count())
 
 
     for i in range (all_emp.count()):
         not_signed_out_graph_name.append(all_emp[i].emp_name)
-        not_signed_out_graph.append(log_list.filter(emp = all_emp[i], emp_present = True, emp_in_time__isnull=False, emp_out_time__isnull=True).exclude(date__in = additonal_off_days).count())
+        not_signed_out_graph.append(log_list.filter(emp = all_emp[i], emp_present = True, emp_in_time__isnull=False, emp_out_time__isnull=True).exclude(date__in = additional_off_days).count())
 
-    show_table = create_daily_log()
+    show_table = create_daily_log() # Create log table. If it returns false then today is off day.
 
     # current_time = now.strftime("%H:%M:%S")
     # print(current_time , settings.endTime)
@@ -101,7 +99,7 @@ def dashboard_view(request):
         "late_time" : settings.delayTime,
         "end_time": settings.endTime,
         "present_emp" : present_emp,
-        "abesent_emp" : abesent_emp,
+        "absent_emp" : absent_emp,
         "late_emp" : late_emp,
         "present_graph" : present_graph,
         "present_graph_name" : present_graph_name,
@@ -118,31 +116,32 @@ def dashboard_view(request):
     
     return render(request, 'dashboard/dashboard_view.html', context)
 
-# Create your views here.
+# Main dashboard
 @login_required(login_url='/user/login/')
 def dashboard(request):
     # token = Token.objects.create(user=request.user)
     todays_date = date.today()
-    log_list = attendanceLog.objects.filter(date__month=todays_date.month)
-    daily_log_list = attendanceLog.objects.filter(date=todays_date)
-    present_emp = daily_log_list.filter(emp_present = True)
-    abesent_emp = daily_log_list.filter(emp_present = False)
-    late_emp = daily_log_list.filter(date=todays_date, emp_present = True, emp_in_time__gte = settings_db.objects.last().delayTime)
+    log_list = attendanceLog.objects.filter(date__month=todays_date.month) # monthly log list
+    daily_log_list = attendanceLog.objects.filter(date=todays_date) # Current day log list
+    present_emp = daily_log_list.filter(emp_present = True) # Present emp list
+    absent_emp = daily_log_list.filter(emp_present = False) # absent emp list
+    late_emp = daily_log_list.filter(date=todays_date, emp_present = True, emp_in_time__gte = settings_db.objects.last().delayTime)# late emp list
 
-    total_emp = employee.objects.all().count()
-    settings = settings_db.objects.last()
+    total_emp = employee.objects.all().count() # Total emp
+    settings = settings_db.objects.last() # settings if not present create one
     if (settings is None):
         settings = settings_db()
         settings.save()
         settings = settings_db.objects.last()
 
+    # Present, late, absent counts
     present_count = attendanceLog.objects.filter(date=todays_date, emp_present = True).count()
     
     late_count = attendanceLog.objects.filter(date=todays_date, emp_present = True, emp_in_time__gte = settings_db.objects.last().delayTime).count()
     # print(settings_db.objects.last().delayTime)
     absent_count = attendanceLog.objects.filter(date=todays_date, emp_present = False).count()
     now = datetime.datetime.now()
-    show_table = create_daily_log()
+    show_table = create_daily_log() # Create log table. If it returns false then today is off day.
     # current_time = now.strftime("%H:%M:%S")
     # print(current_time , settings.endTime)
     context = {
@@ -157,7 +156,7 @@ def dashboard(request):
         "late_time" : settings.delayTime,
         "end_time": settings.endTime,
         "present_emp" : present_emp,
-        "abesent_emp" : abesent_emp,
+        "absent_emp" : absent_emp,
         "late_emp" : late_emp,
         "show_table" : show_table,
 
@@ -167,7 +166,7 @@ def dashboard(request):
     return render(request, 'dashboard/dashboard.html', context)
 
 
-
+# PLEASE CHECK THE CS-MANAGEMENT dashboard > Views.py > def create_daily_log():
 # @login_required(login_url='/user/login/')
 def create_daily_log():
     print("Creating daily log")

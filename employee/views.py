@@ -64,6 +64,7 @@ def add_emp(request):
             messages.error(request, message_text)
     return redirect('employee')
 
+# Fingerprint update portion is same as CS_MGT settings > views.py > def fingerprint_manage 
 @login_required(login_url='/user/login/')
 def update_emp(request):
     print(request.method)
@@ -165,6 +166,8 @@ def update_emp(request):
                 delete_fingerprint(fingerprints)
                 message_text = "Successfully removed " + emp.emp_name + " (ID: " + emp.emp_id + ") from the system."
                 messages.success(request, message_text)
+
+            # Employee data update
             else:
                 # emp = employee.objects.get(id = request.POST['id'])
                 emp.emp_name = request.POST['name']
@@ -197,6 +200,7 @@ def update_emp(request):
             messages.error(request, message_text)
     return redirect('employee')
 
+# Send the delete command to all the device
 def delete_fingerprint(fingerprints):
 
     devices = deviceInfo.objects.all()
@@ -209,6 +213,7 @@ def delete_fingerprint(fingerprints):
             cmd.save()
 
 # @login_required(login_url='/user/login/')
+# Method to send scan the fingerprint command 
 def scan_fingerprint(fid, device, request):
     try:
         cmd = commands()
@@ -242,11 +247,12 @@ def scan_fingerprint(fid, device, request):
 
     # return redirect('employee')
 
-
+# Emp attendance download page
 @login_required(login_url='/user/login/')
 def attendance_download(request):
     todays_date = date.today()
 
+    # Date for filter/download form
     lastMonth = (date.today().replace(day=1) - datetime.timedelta(days =1)).replace(day = 1)
     todayMonth = date.today().replace(day=calendar.monthrange(todays_date.year, todays_date.month)[1])
     
@@ -269,6 +275,7 @@ def attendance_download(request):
     }
     return render(request, 'download/download.html', context)
 
+# Search for the dropdown. AJAX request
 @login_required(login_url='/user/login/')
 def attendance_download_search(request):
     if "term" in request.GET:

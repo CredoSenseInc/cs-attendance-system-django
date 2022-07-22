@@ -8,6 +8,8 @@ import uuid
 from django.db.models.expressions import F
 from importlib_metadata import version
 
+# This portion is same as CS_MGT Device > models.py
+
 # from api_esp.serializers import attendance_serializer
 # bd_time = datetime.datetime.now(tz)
 
