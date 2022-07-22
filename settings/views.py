@@ -8,6 +8,10 @@ import semantic_version
 from django.db.models import Q
 # Create your views here.
 
+# Create your views here.
+# Configuring the overall settings.
+
+# PLEASE CHECK CS_MGT Settings> Views.py > def settings
 @login_required(login_url='/user/login/')
 def settings(request):
     settings = settings_db.objects.last()
@@ -43,6 +47,7 @@ def settings(request):
     }
     return render(request, 'settings/settings.html', context)
 
+# PLEASE CHECK CS_MGT Settings> Views.py > def firmware_update
 @login_required(login_url='/user/login/')
 def firmware_update(request):
     print(request.POST)
@@ -82,6 +87,7 @@ def firmware_update(request):
 
     return redirect('settings')
 
+# Update the settings value
 @login_required(login_url='/user/login/')
 def update(request):
     if request.method == "POST":
