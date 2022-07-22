@@ -16,7 +16,7 @@ from rest_framework.views import APIView
 import time
 # Create your views here.
 
-
+# PLEASE CHECK CS_MANAGEMENT CODE FOR THIS SECTION. BOTH ARE SAME
 class showCommands(APIView): 
     permission_classes = (IsAuthenticated,)
     def get(self, request, device_id):

@@ -14,12 +14,13 @@ import os
 os.environ['OPENBLAS_NUM_THREADS'] = '1'
 
 import pandas as pd
-# Create your views here.
+# Update attendance Values
 @login_required(login_url='/user/login/')
 def update_attendance(request):
     if request.method == "POST":
         print(request.POST)
-        log = attendanceLog.objects.get(id=request.POST['id'])
+        log = attendanceLog.objects.get(id=request.POST['id']) # Get the log object 
+        # Updating attendance Values
         try:
             if(request.POST['statusRadio']) == "1":
                 log.emp_present = True
@@ -29,10 +30,10 @@ def update_attendance(request):
             pass
 
         try:
-            log.date = request.POST['date']
+            log.date = request.POST['date'] # Log date
         except:
             pass
-
+        
         try:
             if(request.POST['inTime']!=""):
                 if(request.POST['statusRadio']) == "1":
@@ -58,7 +59,7 @@ def update_attendance(request):
 
         try:
             log.save()
-            message_text = "Sucessfully updated the log."
+            message_text = "Successfully updated the log."
             messages.success(request, message_text)
         except Exception as e:
             print(e)
@@ -73,18 +74,20 @@ def update_attendance(request):
     except:
         return redirect('dashboard')
 
+# Download the attendance log
+# PLEASE CHECK THE CS-MANAGEMENT hr_management > Views.py > def Download. The code section is almost same. Additional part is here is salary calculation for sauda fashion.
 @login_required(login_url='/user/login/')
 def download(request):
     if(request.method == "POST"):
         response = HttpResponse('')
         print(request.POST)
         try:
-            from_date = str(request.POST['from']).split("-")
-            to_date = str(request.POST['to']).split("-")
-            from_date = datetime.datetime(int(from_date[0]), int(from_date[1]), 1).date()
+            from_date = str(request.POST['from']).split("-") # Taking the from date
+            to_date = str(request.POST['to']).split("-") # Taking the to date
+            from_date = datetime.datetime(int(from_date[0]), int(from_date[1]), 1).date() # First day of the month
             to_date = datetime.datetime(int(to_date[0]), int(to_date[1]), 1).date()
             
-            to_date = to_date.replace(day=calendar.monthrange(to_date.year, to_date.month)[1])
+            to_date = to_date.replace(day=calendar.monthrange(to_date.year, to_date.month)[1]) # last date of the month
 
             # test_date = datetime.date(int(to_date[0]),int(to_date[1]),4)
               

@@ -7,6 +7,7 @@ from django.db.models import Q
 
 from employee.models import employee
 
+# PLEASE CHECK CS_MANAGEMENT CODE FOR THIS SECTION. BOTH ARE SAME
 class commands_serializer(serializers.ModelSerializer):
     class Meta:
         model = commands

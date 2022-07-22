@@ -46,7 +46,7 @@ def add_emp(request):
             emp.save()
 
             deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') - 1)
-            message_text = "Sucessfully added new employee."
+            message_text = "Successfully added new employee."
             messages.success(request, message_text)
 
             attendance = attendanceLog()
@@ -120,7 +120,7 @@ def update_emp(request):
                 emp.emp_finger_id_1 = ""
                 emp.save()
                 deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') + 1)
-                message_text = "Sucessfully updated employee information."
+                message_text = "Successfully updated employee information."
                 messages.success(request, message_text)
 
             elif(request.POST['button'] == "rescan2-delete"):
@@ -128,7 +128,7 @@ def update_emp(request):
                 emp.emp_finger_id_2 = ""
                 emp.save()
                 deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') + 1)
-                message_text = "Sucessfully updated employee information."
+                message_text = "Successfully updated employee information."
                 messages.success(request, message_text)
                 
             elif(request.POST['button'] == "rescan3-delete"):
@@ -136,7 +136,7 @@ def update_emp(request):
                 emp.emp_finger_id_3 = ""
                 emp.save()
                 deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') + 1)
-                message_text = "Sucessfully updated employee information."
+                message_text = "Successfully updated employee information."
                 messages.success(request, message_text)
             
             elif(request.POST['button'] == "rescan4-delete"):
@@ -144,7 +144,7 @@ def update_emp(request):
                 emp.emp_finger_id_4 = ""
                 emp.save()
                 deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') + 1)
-                message_text = "Sucessfully updated employee information."
+                message_text = "Successfully updated employee information."
                 messages.success(request, message_text)
 
             elif(request.POST['button'] == "delete"):
@@ -163,7 +163,7 @@ def update_emp(request):
                     fingerprints.append(emp.emp_finger_id_4)
                 emp.delete()
                 delete_fingerprint(fingerprints)
-                message_text = "Sucessfully removed " + emp.emp_name + " (ID: " + emp.emp_id + ") from the system."
+                message_text = "Successfully removed " + emp.emp_name + " (ID: " + emp.emp_id + ") from the system."
                 messages.success(request, message_text)
             else:
                 # emp = employee.objects.get(id = request.POST['id'])
@@ -189,7 +189,7 @@ def update_emp(request):
                     pass
 
                 emp.save()
-                message_text = "Sucessfully updated employee information."
+                message_text = "Successfully updated employee information."
                 messages.success(request, message_text)
         except Exception as e:
             print(e)
@@ -220,7 +220,7 @@ def scan_fingerprint(fid, device, request):
         while(True):
             check = commands.objects.get(id = json_id)
             if(check.isExecuted):
-                message_text = "Sucessfully updated employee information."
+                message_text = "Successfully updated employee information."
                 messages.success(request, message_text)
                 break
 

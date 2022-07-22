@@ -170,7 +170,7 @@ def update(request):
 
         try:
             settings.save()
-            message_text = "Sucessfully updated the settings."
+            message_text = "Successfully updated the settings."
             messages.success(request, message_text)
         except:
             message_text = "Failed to update the settings. Please try again."

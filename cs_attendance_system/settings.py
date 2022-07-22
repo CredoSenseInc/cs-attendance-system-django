@@ -9,6 +9,10 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+
+
+# PLEASE CHECK CS_MANAGEMENT CODE FOR THIS SECTION. BOTH ARE ALMOST SAME CONFIGURATION
+
 from django.contrib.messages import constants as messages
 from django.contrib.messages import constants as message_constants
 from decouple import config
