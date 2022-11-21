@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'employee',
     'attendance',
     'settings',
+    'finger_template',
 
     'rest_framework',
     'rest_framework.authtoken',
