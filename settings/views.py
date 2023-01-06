@@ -17,10 +17,18 @@ def settings(request):
     settings = settings_db.objects.last()
     device = deviceInfo.objects.all()
     firmware_version = firmware.objects.last()
+
     if(settings is None):
         settings = settings_db()
         settings.save()
 
+    if(firmware_version is None):
+        firmware_version = firmware()
+        firmware_version.save()
+
+    if(device is None):
+        device = deviceInfo()
+        device.save()
 
     update_all_button = False
     all_updated = True

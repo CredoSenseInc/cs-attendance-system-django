@@ -3,9 +3,11 @@ from django.shortcuts import render
 from api_esp.serializers import *
 from device.models import commands
 from attendance.models import attendanceLog
+from finger_template.models import template_info as Item
+from employee.models import employee
 
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
@@ -44,6 +46,8 @@ class showCommands(APIView):
                             return_message.append({"name": emp.emp_name+ " (" + str(emp.emp_id) + ")", "finger_id" : emp.emp_finger_id_3})
                         if emp.emp_finger_id_4 != "":
                             return_message.append({"name": emp.emp_name+ " (" + str(emp.emp_id) + ")", "finger_id" : emp.emp_finger_id_4})
+                        if emp.rfid_tag_number != "":
+                            return_message.append({"name": emp.emp_name+ " (" + str(emp.emp_id) + ")", "rfid_id" : emp.rfid_tag_number})
 
                 if "info" in i['message']:
                     try:
@@ -51,6 +55,20 @@ class showCommands(APIView):
                         return_message.append({"name": emp_info.emp_name + " (" + str(emp_info.emp_id) + ")", "finger_id" : str(i['message']).split(":")[1] })
                     except:
                         return_message.append({"name": "Not Found", "finger_id" : "Not Founds"})
+
+                if "update" in i['message']:
+                    try:
+                        command = commands.objects.last()
+                        serializer = commands_serializer_pull(command)
+
+                        response_data = {}
+                        response_data['id'] = serializer.data["id"]
+                        response_data['device_id'] = serializer.data["device_id"]
+                        response_data['message'] = serializer.data["message"]
+                        response_data['isExecuted'] = serializer.data["isExecuted"]
+                        return JsonResponse(response_data, status=status.HTTP_200_OK) 
+                    except:
+                        return_message.append({"id" : "Not Founds"})
 
                 else:
                     return_message.append({"message": i['server_message']})
@@ -75,3 +93,105 @@ class commandsUpdate(APIView):
                 serializer.save() 
                 return JsonResponse(serializer.data) 
             return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def get(self, request, id):
+        try: 
+            data_obj = commands.objects.get(id=id) 
+            print(data_obj.id)
+        except commands.DoesNotExist: 
+            return JsonResponse({'message': 'The data_obj does not exist'}, status=status.HTTP_404_NOT_FOUND) 
+
+        if request.method == 'GET': 
+            serializer = commands_serializer_pull(data_obj) 
+            # Uncomment for showing all the field
+            # return JsonResponse(serializer.data, status=status.HTTP_200_OK) 
+
+            response_data = {}
+            response_data['id'] = serializer.data["id"]
+            response_data['device_id'] = serializer.data["device_id"]
+            response_data['message'] = serializer.data["message"]
+            response_data['isExecuted'] = serializer.data["isExecuted"]
+            return JsonResponse(response_data, status=status.HTTP_200_OK) 
+
+
+
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def template_sync(request):
+    if request.data["command"] == "free_temp_id":
+        
+        # Fisrt make a list of used id
+        used_id = [0] * 10000
+        free_id = -1
+            
+        for i in Item.objects.filter(group_id=request.data["group_id"], company_name=request.data["company_name"]):
+            used_id[i.temp_id] = 1
+
+        for i in range(1, 10000):
+            print(i)
+            if used_id[i] == 0:
+                print("free id found")
+                free_id = i
+                break
+        
+        if free_id != -1:
+            item = Item(temp_id=free_id, group_id=request.data["group_id"], company_name=request.data["company_name"])
+            item.save()
+        
+        return Response(free_id, status=status.HTTP_201_CREATED)
+
+    elif request.data["command"] == "download_template":
+        print("download temp")
+        item = Item.objects.filter(temp_id = request.data["temp_id"], group_id=request.data["group_id"], company_name=request.data["company_name"]).first()
+        try:
+            return Response(item.temp, status=status.HTTP_201_CREATED)
+        except:
+            return Response(-1, status=status.HTTP_201_CREATED)
+
+
+    elif request.data["command"] == "upload_template":
+        item = Item.objects.filter(temp_id=request.data["temp_id"], group_id=request.data["group_id"], company_name=request.data["company_name"]).first()
+        try:
+            item.delete()
+        except:
+            pass
+            # return Response(-1, status=status.HTTP_201_CREATED)
+
+        item = Item(temp_id=request.data["temp_id"], group_id=request.data["group_id"], company_name=request.data["company_name"], temp=request.data["temp"])
+        try:
+            item.save()
+            return Response(1, status=status.HTTP_201_CREATED)
+        except:
+            return Response(-1, status=status.HTTP_201_CREATED)
+
+
+    elif request.data["command"] == "list_of_temp":
+
+        temp_list = []
+
+        for i in Item.objects.filter(group_id=request.data["group_id"], company_name=request.data["company_name"]):
+            if i.temp:
+                temp_list.append(i.temp_id)
+        temp_list.sort()
+        return Response(temp_list, status=status.HTTP_201_CREATED)
+
+    elif request.data["command"] == "list_of_rfid":
+        rfid_list = []
+
+        for i in employee.objects.all():
+            if i.rfid_tag_number:
+                rfid_list.append(i.rfid_tag_number)
+        rfid_list.sort()
+        return Response(rfid_list, status=status.HTTP_201_CREATED)
+
+    elif request.data["command"] == "delete_template":
+        item = Item.objects.filter(temp_id=request.data["temp_id"], group_id=request.data["group_id"], company_name=request.data["company_name"]).first()
+        try:
+            item.delete()
+            return Response(1, status=status.HTTP_201_CREATED)
+        except:
+            return Response(-1, status=status.HTTP_201_CREATED)

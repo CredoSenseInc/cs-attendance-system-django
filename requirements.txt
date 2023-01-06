@@ -19,3 +19,5 @@ sqlparse==0.4.2
 typing-extensions==4.0.1
 tzdata==2021.5
 zipp==3.7.0
+python-decouple
+django-post-office

@@ -125,7 +125,6 @@ def dashboard(request):
     daily_log_list = attendanceLog.objects.filter(date=todays_date) # Current day log list
     present_emp = daily_log_list.filter(emp_present = True) # Present emp list
     absent_emp = daily_log_list.filter(emp_present = False) # absent emp list
-    late_emp = daily_log_list.filter(date=todays_date, emp_present = True, emp_in_time__gte = settings_db.objects.last().delayTime)# late emp list
 
     total_emp = employee.objects.all().count() # Total emp
     settings = settings_db.objects.last() # settings if not present create one
@@ -133,6 +132,8 @@ def dashboard(request):
         settings = settings_db()
         settings.save()
         settings = settings_db.objects.last()
+
+    late_emp = daily_log_list.filter(date=todays_date, emp_present = True, emp_in_time__gte = (settings_db.objects.last()).delayTime)# late emp list
 
     # Present, late, absent counts
     present_count = attendanceLog.objects.filter(date=todays_date, emp_present = True).count()

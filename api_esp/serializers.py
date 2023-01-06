@@ -23,13 +23,14 @@ class commands_serializer(serializers.ModelSerializer):
                 # print(data['scan_time'].time())
                 if data['scan_time'].date() == todays_date:
                     if daily_log_list.emp_in_time is None:
-                        # FOR CREDOSENSE ONLY REMOVE FOR SAUDA FASHION
-                        if data['scan_time'].time().hour >= 13:
-                            pass
-                        else:
-                            daily_log_list.emp_present = True
-                            if(daily_log_list.date == data['scan_time'].date()):
-                                daily_log_list.emp_in_time = data['scan_time'].time()
+                        # # FOR CREDOSENSE ONLY REMOVE FOR SAUDA FASHION
+                        # # if data['scan_time'].time().hour >= 13:
+                        # if 0:
+                        #     pass
+                        # else:
+                        daily_log_list.emp_present = True
+                        if(daily_log_list.date == data['scan_time'].date()):
+                            daily_log_list.emp_in_time = data['scan_time'].time()
                     
                     elif daily_log_list.emp_in_time is not None:
                         if(daily_log_list.date == data['scan_time'].date()):
@@ -59,7 +60,7 @@ class commands_serializer(serializers.ModelSerializer):
                 message_from_esp = str(data['message']).split(":")
                 f_id = message_from_esp[1]
                 
-                emp_info = employee.objects.get(Q(emp_finger_id_1 = f_id) | Q(emp_finger_id_2 = f_id) | Q(emp_finger_id_3 = f_id) | Q(emp_finger_id_4 = f_id))
+                emp_info = employee.objects.get(Q(emp_finger_id_1 = f_id) | Q(emp_finger_id_2 = f_id) | Q(emp_finger_id_3 = f_id) | Q(emp_finger_id_4 = f_id)| Q(rfid_tag_number = f_id) )
                 data['isExecuted'] = True
                 text_to_send = str(emp_info.emp_id)
                 data['server_message'] = text_to_send
@@ -83,6 +84,15 @@ class commands_serializer(serializers.ModelSerializer):
             except Exception as e:
                 print("Exception from commands_serializer:", e)
 
+        elif("update" in data['message']):
+            try:
+                # device_id = data['device_id']
+                data['isExecuted'] = False
+                # message = data['message']
+            except Exception as e:
+                print("Exception from commands_serializer:", e)
+
+
         else:
             data['isExecuted'] = True
             data['server_message'] = "Data Received"
@@ -92,6 +102,7 @@ class commands_serializer_pull(serializers.ModelSerializer):
     class Meta:
         model = commands
         fields = '__all__'
+
 
 class attendance_serializer(serializers.ModelSerializer):
     class Meta:

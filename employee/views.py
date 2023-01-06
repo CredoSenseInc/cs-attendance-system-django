@@ -38,9 +38,9 @@ def add_emp(request):
             emp.emp_gender = request.POST['gender']
             emp.emp_designation = request.POST['designation']
             emp.emp_dept = request.POST['dept']
-            emp.emp_salary_type = request.POST['salaryType']
-            emp.emp_salary= request.POST['salary']
-            emp.emp_overtime_per_hour = request.POST['oversalary']
+            # emp.emp_salary_type = request.POST['salaryType']
+            # emp.emp_salary= request.POST['salary']
+            # emp.emp_overtime_per_hour = request.POST['oversalary']
             emp.email = request.POST['email']
             
             emp.save()
@@ -75,6 +75,7 @@ def update_emp(request):
             if(request.POST['button'] == "rescan1"):
                 device = deviceInfo.objects.get(device_id = request.POST['device'])
                 if(device.device_emp_count > 0):
+                    delete_fingerprint([emp.emp_finger_id_1])
                     scan_fingerprint(emp.emp_finger_id_1, request.POST['device'], request)
                 else:
                     message_text = "Failed to update employee information. Finger print device reached max capacity."
@@ -87,6 +88,7 @@ def update_emp(request):
                         emp.emp_finger_id_2 = generate_unique_fid()
                         emp.save()
                         deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') - 1)
+                    delete_fingerprint([emp.emp_finger_id_2])
                     scan_fingerprint(emp.emp_finger_id_2, request.POST['device'], request)
                 else:
                     message_text = "Failed to update employee information. Finger print device reached max capacity."
@@ -99,6 +101,7 @@ def update_emp(request):
                         emp.emp_finger_id_3 = generate_unique_fid()
                         emp.save()
                         deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') - 1)
+                    delete_fingerprint([emp.emp_finger_id_3])
                     scan_fingerprint(emp.emp_finger_id_3, request.POST['device'], request)
                 else:
                     message_text = "Failed to update employee information. Finger print device reached max capacity."
@@ -111,6 +114,7 @@ def update_emp(request):
                         emp.emp_finger_id_4 = generate_unique_fid()
                         emp.save()
                         deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') - 1)
+                    delete_fingerprint([emp.emp_finger_id_4])
                     scan_fingerprint(emp.emp_finger_id_4, request.POST['device'], request)
                 else:
                     message_text = "Failed to update employee information. Finger print device reached max capacity."
@@ -177,9 +181,9 @@ def update_emp(request):
                 emp.emp_gender = request.POST['gender']
                 emp.emp_designation = request.POST['designation']
                 emp.emp_dept = request.POST['dept']
-                emp.emp_salary_type = request.POST['salaryType']
-                emp.emp_salary= request.POST['salary']
-                emp.emp_overtime_per_hour = request.POST['oversalary']
+                # emp.emp_salary_type = request.POST['salaryType']
+                # emp.emp_salary= request.POST['salary']
+                # emp.emp_overtime_per_hour = request.POST['oversalary']
 
                 try:
                     emp.email = request.POST['email']
@@ -227,6 +231,17 @@ def scan_fingerprint(fid, device, request):
             if(check.isExecuted):
                 message_text = "Successfully updated employee information."
                 messages.success(request, message_text)
+                
+                devices = deviceInfo.objects.all()
+                for i in range (len(devices)):
+                    if (devices[i] == cmd.device_id):
+                        pass
+                    else:
+                        cmd2 = commands()
+                        cmd2.device_id = devices[i]
+                        cmd2.message = "scan:-99"
+                        cmd2.save()
+                
                 break
 
             if time.time() > timeout:

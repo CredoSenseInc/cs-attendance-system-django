@@ -21,19 +21,19 @@ def generate_unique_id():
     return u_id
 
 class deviceInfo(models.Model):
-    device_name = models.CharField(max_length=255, blank=False, null=False)
+    device_name = models.CharField(max_length=255, blank=False, null=False, default="EMPTY")
     device_id = models.CharField(max_length=15, default=generate_unique_id, unique = True)
-    device_deptartment = models.CharField(max_length=255, blank=False, null=False)
-    device_location = models.CharField(max_length=255, blank=False, null=False)
-    device_emp_count = models.IntegerField(default = 0, blank=False, null=False)
-    firmware_version = models.CharField(max_length=255, blank=False, null=False)
+    device_deptartment = models.CharField(max_length=255, blank=True, null=True)
+    device_location = models.CharField(max_length=255, blank=True, null=True)
+    device_emp_count = models.IntegerField(default = 0, blank=True, null=True)
+    firmware_version = models.CharField(max_length=255, blank=True, null=True)
     def __str__(self):
             return f"{self.device_id}"
 
 
 class firmware(models.Model):
-    version = models.CharField(max_length=255, null=False, blank=False)
-    url = models.CharField(max_length=255, null=False, blank=False)
+    version = models.CharField(max_length=255, null=False, blank=False, default="0.0.1")
+    url = models.CharField(max_length=255, null=False, blank=False, default="http://credosense.com/downloads")
     timestamp = models.DateTimeField(auto_now_add=True, blank=True)
     changelog = models.CharField(max_length=255, null=True, blank=True)
 
