@@ -35,7 +35,7 @@ def generate_unique_fid():
 
 class employee(models.Model):
     emp_name = models.CharField(max_length=255, blank=False, null=False)
-    emp_contact_number = models.CharField(max_length=255, blank=False, null=False)
+    emp_contact_number = models.CharField(max_length=255, blank=True, null=True)
     emp_id = models.CharField(max_length=15, blank=False, null=False, unique = True)
     email = models.EmailField(max_length=254, null= True, blank=True)
 
@@ -43,12 +43,12 @@ class employee(models.Model):
     emp_finger_id_2 = models.CharField(max_length=255, blank=True, null=False,  default="")
     emp_finger_id_3 = models.CharField(max_length=255, blank=True, null=False, default="")
     emp_finger_id_4 = models.CharField(max_length=255, blank=True, null=False,  default="")
-    rfid_tag_number = models.CharField(max_length=255, blank=True, null=False,  default="")
+    rfid_tag_number = models.IntegerField(blank=True, null=True, unique=True, default=None)
 
-    emp_gender = models.CharField(max_length=255, blank=False, null=False, choices=gender)
+    emp_gender = models.CharField(max_length=255, blank=True, null=True, choices=gender)
     emp_designation = models.CharField(max_length=255, blank=False, null=False, default="")
     emp_dept = models.CharField(max_length=255, blank=False, null=False, default="")
-    emp_salary_type = models.CharField(max_length=255, blank=False, null=False, choices=salary_type)
+    emp_salary_type = models.CharField(max_length=255, blank=True, null=True, choices=salary_type)
     emp_salary= models.CharField(max_length=255, blank=False, null=False, default="0")
     emp_overtime_per_hour = models.CharField(max_length=255, blank=False, null=False, default="0")
 
