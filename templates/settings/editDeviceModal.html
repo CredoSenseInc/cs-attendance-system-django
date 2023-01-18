@@ -20,7 +20,7 @@
                         </div>
                     </div>
 
-                    <div class="row g-3 align-items-center mb-3">
+                    <!-- <div class="row g-3 align-items-center mb-3">
                         <div class="col-auto">
                             <label for="" class="col-form-label label-space">Employee Count:* </label>
                         </div>
@@ -29,7 +29,8 @@
                             <input type="number" id="number" name="emp-count" class="form-control"
                                 aria-describedby="number" value="{{d.device_emp_count}}" required>
                         </div>
-                    </div>
+                    </div> -->
+                    
 
                     <div class="row g-3 align-items-center mb-3" hidden>
                         <div class="col-auto">
@@ -54,12 +55,21 @@
                                 value="{{d.device_location}}">
                         </div>
                     </div>
+                    
+                    <div class="row g-3 align-items-center mb-3" hidden>
+                        <div class="col-auto">
+                            <label for="" class="col-form-label label-space"> Fingerprint left:</label>
+                        </div>
 
+                        <div class="col-auto">
+                            <label for="" class="col-form-label label-space">{{d.device_emp_count}}</label>
+                        </div>
+                    </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-danger" name="button" value="delete">Remove</button>
-                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="submit" class="btn btn-primary" name="button" value="update">Update</button>
                     </div>
                 </form>
             </div>

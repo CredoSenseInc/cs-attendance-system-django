@@ -37,16 +37,22 @@ def edit_device(request):
         print(request.POST)
         try:
             device = deviceInfo.objects.get(device_id = request.POST['device-id'])
+            print(device)
             
 
             if request.POST['button']=="delete":
+                print("delete")
                 device.delete()
-            else:
+            elif request.POST['button']=="update":
+                print("update")
                 device.device_name = request.POST['device-name']
                 device.device_location = request.POST['device-location']
-                device.device_emp_count = request.POST['emp-count']
+                # device.device_emp_count = request.POST['emp-count']
                 device.save()
-
+            else:
+                pass
+                
+                
         except Exception as e:
             print(e)
             message_text = "Failed to edit Device. Please try again."
