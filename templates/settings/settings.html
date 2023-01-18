@@ -169,10 +169,11 @@
       <hr>
       {% include "settings/changelog.html" %}
       {% include "settings/warning-all.html" %}
-      Token: {{token}} | Latest Firmware Version: {{firmware_version.version}} | {% if all_updated %} All the devices are updated {% elif not update_all_button %} <a href="#" data-bs-toggle="modal" data-bs-target="#warning-all" style="color: #f58045;"><u><b>Update all</b></u></a>{% else %} Updating... {% endif %} | <a href="#" data-bs-toggle="modal" data-bs-target="#whatnew" style="color: #009145;"><u>See what's new</u></a>
+      Token {{token}}
       {% include "settings/addDeviceModal.html" %}
-      <a href="#" data-bs-toggle="modal" data-bs-target="#add-dev"><i
-        class="fas fa-user-plus" style="float: right; margin-left: 10px; color: rgb(0, 0, 0);" title="Add employee"></i></a>
+      <br>
+      <br>
+      <a href="#" data-bs-toggle="modal" data-bs-target="#add-dev"><button class="btn btn-primary">Add device</button></a>
 
          
 
