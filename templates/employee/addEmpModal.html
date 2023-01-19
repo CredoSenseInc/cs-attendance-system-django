@@ -59,7 +59,7 @@
                 </div>
 
                 <div class="col-auto">
-                    <input type="text" id="fid" name="fid" class="form-control" aria-describedby="fid" value="" required>
+                    <input type="text" id="fid" name="fid" class="form-control" aria-describedby="fid" value="" >
                 </div>
             </div> -->
 
@@ -138,7 +138,7 @@
                 </div>
 
                 <div class="col-auto">
-                    <select class="form-select" aria-label="Default select example" name="device" required>
+                    <select class="form-select" aria-label="Default select example" name="device" >
                         
                         {% for device in device_list %}
                         <option value="{{device.device_id}}">{{device.device_name}}</option>
