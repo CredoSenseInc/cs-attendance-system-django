@@ -7,6 +7,10 @@ from django.db.models import Q
 
 from employee.models import employee
 
+from settings.models import *
+from datetime import date
+import datetime
+
 # PLEASE CHECK CS_MANAGEMENT CODE FOR THIS SECTION. BOTH ARE SAME
 class commands_serializer(serializers.ModelSerializer):
     class Meta:
@@ -15,7 +19,9 @@ class commands_serializer(serializers.ModelSerializer):
     def validate(self, data):   
         if("attendance" in data['message']):
             try:
-                todays_date = date.today()
+                # todays_date = date.today()
+                todays_date = data['scan_time'].date()
+                create_log_for_date(todays_date)
                 message_from_esp = str(data['message']).split(":")
                 f_id = message_from_esp[1]
                 
@@ -31,10 +37,19 @@ class commands_serializer(serializers.ModelSerializer):
                         daily_log_list.emp_present = True
                         if(daily_log_list.date == data['scan_time'].date()):
                             daily_log_list.emp_in_time = data['scan_time'].time()
-                    
+
                     elif daily_log_list.emp_in_time is not None:
-                        if(daily_log_list.date == data['scan_time'].date()):
+                        if (daily_log_list.emp_in_time > data['scan_time'].time()):
+                            daily_log_list.emp_in_time = data['scan_time'].time()
+                        
+                        elif daily_log_list.emp_out_time is None:
                             daily_log_list.emp_out_time = data['scan_time'].time()
+
+                        elif (daily_log_list.emp_out_time < data['scan_time'].time()):
+                                daily_log_list.emp_out_time = data['scan_time'].time()
+                    else:
+                        print("do you need this datetime ?? ")
+                        print(data['scan_time'])
 
                     daily_log_list.save()
                     data['isExecuted'] = True
@@ -122,3 +137,108 @@ class attendance_serializer(serializers.ModelSerializer):
     #         raise serializers.ValidationError({"detail": "input is not valid"})
             
     #     return data
+
+
+def create_log_for_date(todays_date = date.today()):
+    print("Creating daily log")
+    print(todays_date)
+    print(datetime.datetime.now().strftime("%H:%M:%S"))
+    all_emp = employee.objects.all()
+    settings = settings_db.objects.last()   
+    offDay = str(settings.offDay).split(",")
+    workDay = str(settings.workDay).split(",")
+    print(workDay)
+
+    for i in range (len(offDay)):
+        if(offDay[i]!=''):
+            offDay[i] = datetime.datetime.strptime(offDay[i], '%m/%d/%Y').date()
+        # offDay[i] = datetime.datetime.strptime(offDay[i], '%Y-%m-%d').date()
+        # print(offDay[i])
+
+    for i in range (len(workDay)):
+        if(workDay[i]!=''):
+            workDay[i] = datetime.datetime.strptime(workDay[i], '%m/%d/%Y').date()
+        # workDay[i] = datetime.datetime.strptime(workDay[i], '%Y-%m-%d').date()
+        # print(offDay[i])
+    weekends = []
+
+    if settings.week_saturday:
+        weekends.append("Saturday")
+    if settings.week_sunday:
+        weekends.append("Sunday")
+    if settings.week_monday:
+        weekends.append("Monday")
+    if settings.week_tuesday:
+        weekends.append("Tuesday")
+    if settings.week_wednesday:
+        weekends.append("Wednesday")
+    if settings.week_thursday:
+        weekends.append("Thursday")
+    if settings.week_friday:
+        weekends.append("Friday")
+
+    print(todays_date.strftime('%A'))
+    print(weekends)
+
+    if (todays_date.strftime('%A') in weekends):
+        if(todays_date in workDay):
+            all_emp = employee.objects.all()
+            check_today_log = attendanceLog.objects.filter(date = todays_date).count()
+            print(check_today_log)
+            if (check_today_log == 0):
+                for i in range (len(all_emp)):
+                    attendance = attendanceLog()
+                    attendance.emp = all_emp[i]
+                    attendance.finger1 = all_emp[i]
+                    attendance.date = todays_date
+                    attendance.save()
+
+    elif(todays_date in offDay):
+        # weekend
+        pass
+    else:
+        all_emp = employee.objects.all()
+        check_today_log = attendanceLog.objects.filter(date = todays_date).count()
+        print(check_today_log)
+        if (check_today_log == 0):
+            for i in range (len(all_emp)):
+                attendance = attendanceLog()
+                attendance.emp = all_emp[i]
+                attendance.finger1 = all_emp[i]
+                attendance.date = todays_date
+                attendance.save()   
+
+    if (todays_date.strftime('%A') in weekends or todays_date in offDay and todays_date not in workDay):
+        print("Today is weekend")
+    
+    elif(todays_date.strftime('%A') not in weekends or todays_date not in offDay and todays_date  in workDay):
+        print("Today is workday")
+        all_emp = employee.objects.all()
+        check_today_log = attendanceLog.objects.filter(date = todays_date).count()
+        print(check_today_log)
+        if (check_today_log == 0):
+            for i in range (len(all_emp)):
+                attendance = attendanceLog()
+                attendance.emp = all_emp[i]
+                attendance.finger = all_emp[i]
+                attendance.date = todays_date
+                attendance.save()
+                
+    # check_today_log = attendanceLog.objects.filter(date = todays_date).count()
+    
+    # if check_today_log > 0:
+    #     show_table = True
+    # else:
+    #     show_table = False
+
+
+    show_table = True
+    if (todays_date.strftime('%A') in weekends):
+        show_table = False
+        if(todays_date in workDay):
+            show_table = True
+    elif(todays_date in offDay):
+        show_table = False
+    else:
+        show_table = True
+    return show_table

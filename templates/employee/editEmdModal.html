@@ -13,7 +13,7 @@
             {% csrf_token %}
             <div class="row g-3 align-items-center mb-3">
                 <div class="col-auto">
-                    <label for="" class="col-form-label label-space">Name: </label>
+                    <label for="" class="col-form-label label-space">Name:* </label>
                 </div>
 
                 <div class="col-auto">
@@ -33,7 +33,7 @@
 
             <div class="row g-3 align-items-center mb-3">
                 <div class="col-auto">
-                    <label for="" class="col-form-label label-space">Emp. ID: </label>
+                    <label for="" class="col-form-label label-space">Emp. ID:* </label>
                 </div>
 
                 <div class="col-auto">
@@ -124,8 +124,16 @@
                 </div>
 
                 <div class="col-auto">
+                    {% if emp.rfid_tag_number is not None %}
                     <input type="text" id="oversalary" name="rfid" class="form-control" aria-describedby="oversalary" value="{{emp.rfid_tag_number}}">
+                    {% else %}
+                    <input type="text" id="oversalary" name="rfid" class="form-control" aria-describedby="oversalary" value="">
+                    {% endif %}
                 </div>
+
+                <!-- <div class="col-auto">
+                    <button type="submit" class="btn btn-info" name="button" value="rfid_delete">Delete</button>
+                </div> -->
             </div>
 
             <div class="row g-3 align-items-center mb-3">
@@ -185,7 +193,7 @@
                 {%endif%}
             </div>
            
-            <div class="row g-3 align-items-center mb-3">
+            <!-- <div class="row g-3 align-items-center mb-3">
                 <div class="col-auto">
                     <div class="row">
                         <div class="col">
@@ -198,9 +206,9 @@
                     <button type="submit" class="btn btn-danger" name="button" value="rescan3-delete">Delete Fingerprint 3</button>
                 </div>
                 {%endif%}
-            </div>
+            </div> -->
 
-            <div class="row g-3 align-items-center mb-3">
+            <!-- <div class="row g-3 align-items-center mb-3">
                 <div class="col-auto">
                     <div class="row">
                         <div class="col">
@@ -214,7 +222,7 @@
                     <button type="submit" class="btn btn-danger" name="button" value="rescan4-delete">Delete Fingerprint 4</button>
                 </div>
                 {%endif%}
-            </div>
+            </div> -->
 
             <input type="text" id="from" name="id" class="form-control" aria-describedby="FromTime"
             value="{{emp.id}}" required hidden>

@@ -25,7 +25,12 @@ class showCommands(APIView):
         print(device_id)
         five_minutes_ago = datetime.datetime.now()  + datetime.timedelta(minutes=-5)
         print(five_minutes_ago)
-        commandsToSend = commands.objects.filter(Q(isExecuted = False, timestamp__gte=five_minutes_ago, device_id = device_id) | Q(isExecuted = False, message__contains = "delete", device_id = device_id) | Q(isExecuted = False, message__contains = "update", device_id = device_id))
+
+        commandsToSend = commands.objects.filter(Q(isExecuted = False, timestamp__gte=five_minutes_ago, device_id = device_id) | Q(isExecuted = False, message__contains = "update", device_id = device_id)).reverse()[:1]
+        # commandsToSend.order_by("-timestamp").first
+
+
+        # commandsToSend = commands.objects.filter(Q(isExecuted = False, timestamp__gte=five_minutes_ago, device_id = device_id) | Q(isExecuted = False, message__contains = "delete", device_id = device_id) | Q(isExecuted = False, message__contains = "update", device_id = device_id))
         serialize = commands_serializer(commandsToSend, many = True)
         return Response(serialize.data)
 

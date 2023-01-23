@@ -169,7 +169,14 @@
       <hr>
       {% include "settings/changelog.html" %}
       {% include "settings/warning-all.html" %}
-      Latest Firmware Version: {{firmware_version.version}} | {% if all_updated %} All the devices are updated {% elif not update_all_button %} <a href="#" data-bs-toggle="modal" data-bs-target="#warning-all" style="color: #f58045;"><u><b>Update all</b></u></a>{% else %} Updating... {% endif %} | <a href="#" data-bs-toggle="modal" data-bs-target="#whatnew" style="color: #009145;"><u>See what's new</u></a>
+      Token {{token}}
+      {% include "settings/addDeviceModal.html" %}
+      <br>
+      <br>
+      <a href="#" data-bs-toggle="modal" data-bs-target="#add-dev"><button class="btn btn-primary">Add device</button></a>
+
+         
+
       <table id="deviceTable" class="table table-striped table-hover table-responsive" style="width:100%">
         <thead>
             <tr>
@@ -181,11 +188,14 @@
             </tr>
         </thead>
         <tbody>
+
+
             
             {%for d in device%}
             {% include "settings/warning.html" %}
+            {% include "settings/editDeviceModal.html" %}
             <tr>
-                <td style="vertical-align: text-top;">{{d.device_name}}</td>
+                <td style="vertical-align: text-top;"><a href="#" data-bs-toggle="modal" data-bs-target="#edit-dev{{d.device_id}}">{{d.device_name}}</a></td>
                 <td style="vertical-align: text-top;">{{d.device_id}}</td>
                 <td style="vertical-align: text-top;">{{d.device_location}}</td>
                 <td style="vertical-align: text-top;">{{d.firmware_version}}</td>

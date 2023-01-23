@@ -1,0 +1,79 @@
+<!-- Modal -->
+<div class="modal fade" id="edit-dev{{d.device_id}}" tabindex="-1" aria-labelledby="empadd" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Device: {{d.device_id}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form name="atn-update" class="form" action="devices/edit-device" method="post">
+                    {% csrf_token %}
+                    <div class="row g-3 align-items-center mb-3">
+                        <div class="col-auto">
+                            <label for="" class="col-form-label label-space">Device Name:* </label>
+                        </div>
+
+                        <div class="col-auto">
+                            <input type="text" id="name" name="device-name" class="form-control" aria-describedby="name"
+                                value="{{d.device_name}}" required>
+                        </div>
+                    </div>
+
+                    <!-- <div class="row g-3 align-items-center mb-3">
+                        <div class="col-auto">
+                            <label for="" class="col-form-label label-space">Employee Count:* </label>
+                        </div>
+
+                        <div class="col-auto">
+                            <input type="number" id="number" name="emp-count" class="form-control"
+                                aria-describedby="number" value="{{d.device_emp_count}}" required>
+                        </div>
+                    </div> -->
+                    
+
+                    <div class="row g-3 align-items-center mb-3" hidden>
+                        <div class="col-auto">
+                            <label for="" class="col-form-label label-space">Device ID:* </label>
+                        </div>
+
+                        <div class="col-auto">
+                            <input type="text" id="id" name="device-id" class="form-control" aria-describedby="id" value="{{d.device_id}}" required>
+                            
+                        </div>
+                    </div>
+
+
+
+                    <div class="row g-3 align-items-center mb-3">
+                        <div class="col-auto">
+                            <label for="" class="col-form-label label-space">Location: </label>
+                        </div>
+
+                        <div class="col-auto">
+                            <input type="text" id="dept" name="device-location" class="form-control" aria-describedby="dept"
+                                value="{{d.device_location}}">
+                        </div>
+                    </div>
+                    
+                    <div class="row g-3 align-items-center mb-3" hidden>
+                        <div class="col-auto">
+                            <label for="" class="col-form-label label-space"> Fingerprint left:</label>
+                        </div>
+
+                        <div class="col-auto">
+                            <label for="" class="col-form-label label-space">{{d.device_emp_count}}</label>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger" name="button" value="delete">Remove</button>
+                        <button type="submit" class="btn btn-primary" name="button" value="update">Update</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

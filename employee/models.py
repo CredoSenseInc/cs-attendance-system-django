@@ -43,7 +43,7 @@ class employee(models.Model):
     emp_finger_id_2 = models.CharField(max_length=255, blank=True, null=False,  default="")
     emp_finger_id_3 = models.CharField(max_length=255, blank=True, null=False, default="")
     emp_finger_id_4 = models.CharField(max_length=255, blank=True, null=False,  default="")
-    rfid_tag_number = models.IntegerField( blank=True, null=False, default=0)
+    rfid_tag_number = models.IntegerField(blank=True, null=True, unique=True, default=None)
 
     emp_gender = models.CharField(max_length=255, blank=True, null=True, choices=gender)
     emp_designation = models.CharField(max_length=255, blank=False, null=False, default="")

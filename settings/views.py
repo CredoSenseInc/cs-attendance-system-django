@@ -6,6 +6,7 @@ from django.contrib import messages
 import semantic_version
 
 from django.db.models import Q
+from rest_framework.authtoken.models import Token
 # Create your views here.
 
 # Create your views here.
@@ -17,11 +18,15 @@ def settings(request):
     settings = settings_db.objects.last()
     device = deviceInfo.objects.all()
     firmware_version = firmware.objects.last()
+    token = Token.objects.last()
 
     if(settings is None):
         settings = settings_db()
         settings.save()
-
+    
+    if(token is None):
+        token = Token.objects.create(user=request.user)
+        print(token)
     if(firmware_version is None):
         firmware_version = firmware()
         firmware_version.save()
@@ -51,7 +56,8 @@ def settings(request):
         "device" : device,
         "firmware_version" : firmware_version,
         "update_all_button" : update_all_button,
-        "all_updated" : all_updated
+        "all_updated" : all_updated,
+        "token" : token
     }
     return render(request, 'settings/settings.html', context)
 

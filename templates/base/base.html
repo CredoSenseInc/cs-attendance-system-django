@@ -34,6 +34,12 @@
 
     <!-- Nav CSS -->
     <link rel="stylesheet" href="{%static ''%}css/nav.css">
+    <style>
+      .required:after {
+        content:" *";
+        color: red;
+      }
+    </style>
 </head>
 <body>
     {% block header %}

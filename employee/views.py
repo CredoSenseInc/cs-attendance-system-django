@@ -153,6 +153,8 @@ def update_emp(request):
                 messages.success(request, message_text)
 
             elif(request.POST['button'] == "delete"):
+                if emp.rfid_tag_number != -1:
+                    delete_rfid(emp.rfid_tag_number)
                 fingerprints = []
                 if(emp.emp_finger_id_1 != ""):
                         deviceInfo.objects.all().update(device_emp_count=F('device_emp_count') + 1)
@@ -170,6 +172,8 @@ def update_emp(request):
                 delete_fingerprint(fingerprints)
                 message_text = "Successfully removed " + emp.emp_name + " (ID: " + emp.emp_id + ") from the system."
                 messages.success(request, message_text)
+
+            
 
             # Employee data update
             else:
@@ -189,13 +193,46 @@ def update_emp(request):
                     emp.email = request.POST['email']
                 except:
                     pass
+                
+                previous_rfid = emp.rfid_tag_number
+                # if int(request.POST['rfid']) != emp.rfid_tag_number:
+                #     delete_rfid(emp.rfid_tag_number)
 
                 try:
-                    emp.rfid_tag_number = request.POST['rfid']
-                except:
+                    emp.rfid_tag_number = request.POST['rfid'] if request.POST['rfid'] != None else None
+                    
+
+                    if (emp.rfid_tag_number == ""):
+                        emp.rfid_tag_number = None
+
+                    new_rfid = emp.rfid_tag_number
+
+                    print("----")
+                    print(new_rfid)
+                except Exception as e:
+                    
+                    print(e)
+                    pass
+                
+                emp.save()
+
+                    
+                if previous_rfid is None and new_rfid is not None:
+                    # no need to delete the previous rfid
+                    save_rfid(new_rfid)
+
+                elif new_rfid is None and previous_rfid is not None:
+                    # no need to save the new rfid
+                    delete_rfid(previous_rfid)
+
+                elif new_rfid != previous_rfid:
+                    delete_rfid(previous_rfid)
+                    save_rfid(new_rfid)
+                
+                else:
                     pass
 
-                emp.save()
+
                 message_text = "Successfully updated employee information."
                 messages.success(request, message_text)
         except Exception as e:
@@ -215,6 +252,28 @@ def delete_fingerprint(fingerprints):
             cmd.device_id = devices[i]
             cmd.message = "delete:"+ str(fingerprints[j])
             cmd.save()
+
+
+# Send the delete command to delete the rfid tag number to all the device
+def delete_rfid(rfid):
+    devices = deviceInfo.objects.all()
+    for i in range (len(devices)):     
+        print("RFID : " , rfid)
+        cmd = commands()
+        cmd.device_id = devices[i]
+        cmd.message = "delete_rfid:"+ str(rfid)
+        cmd.save()
+
+# Send the delete command to save the rfid tag number to all the device
+def save_rfid(rfid):
+    devices = deviceInfo.objects.all()
+    for i in range (len(devices)):     
+        print("RFID : " , rfid)
+        cmd = commands()
+        cmd.device_id = devices[i]
+        cmd.message = "save_rfid:"+ str(rfid)
+        cmd.save()
+
 
 # @login_required(login_url='/user/login/')
 # Method to send scan the fingerprint command 

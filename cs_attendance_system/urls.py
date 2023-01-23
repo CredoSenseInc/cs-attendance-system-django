@@ -26,5 +26,6 @@ urlpatterns = [
 
     path('api-auth/', include('rest_framework.urls')),
     path('api-esp/', include('api_esp.urls')),
+    path('settings/devices/', include('device.urls')),
 
 ]
