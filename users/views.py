@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
 from django.contrib.auth.decorators import login_required
 import re
+from users.models import *
 # Create your views here.
 
 def user_login(request):
@@ -12,6 +13,20 @@ def user_login(request):
         email = request.POST['email']
         # take the data from username field and put it in a variable
         password = request.POST['password']
+
+        # my_user = MyUserManager.create_superuser("admin@credosense.com","1234")
+        u = None
+        try:
+            u = MyUser.objects.get(email="admin")
+        except:
+            pass
+        if u is None:
+            print("No user named admin exists, creating one")
+            MyUser.objects.create_superuser("admin","1234")
+            pass
+        else:
+            print("user admin exists")
+            
         user = authenticate(request, email=email,
                             password=password)  # authenticates the user
         if user is not None:  # check if the user is inside our database
