@@ -123,7 +123,7 @@ EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=True, cast=bool)
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-database = 0
+database = 2
 
 if(database == 0):
     DATABASES = {
